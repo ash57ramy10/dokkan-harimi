@@ -1,0 +1,1612 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" id="main-html">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>دكان حريمي | DOKAN Harimi</title>
+    <!-- استدعاء إطار عمل Tailwind CSS للتصميم -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- استدعاء خط القاهرة وخط Serif للوجو من جوجل -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Cinzel:wght@700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <!-- أيقونات FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Cairo', sans-serif; }
+        .size-btn.active { background-color: #1e3a8a; color: white; border-color: #1e3a8a; }
+        .thumb-card.active { border-color: #1e3a8a; background-color: #eff6ff; transform: translateY(-3px); box-shadow: 0 4px 6px -1px rgba(30, 58, 138, 0.2); }
+        .filter-btn.active { background-color: #1e3a8a; color: white; border-color: #1e3a8a; box-shadow: 0 4px 6px -1px rgba(30, 58, 138, 0.25); }
+        .size-filter-btn.active { background-color: #b91c1c; color: white; border-color: #b91c1c; box-shadow: 0 4px 6px -1px rgba(185, 28, 28, 0.25); }
+        
+        /* تأثير ظل حقيقي للتيكيت المفرغ بدون خلفية */
+        .ticket-cutout {
+            filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.35));
+            background: transparent !important;
+        }
+
+        /* تأثير دوران ناعم عند تغيير الزاوية */
+        @keyframes flipAngle {
+            0% { opacity: 0.3; transform: perspective(800px) rotateY(25deg) scale(0.95); }
+            100% { opacity: 1; transform: perspective(800px) rotateY(0deg) scale(1); }
+        }
+        .animate-angle { animation: flipAngle 0.35s ease-out forwards; }
+
+        /* نبض زر الواتساب العائم */
+        @keyframes pulse-green {
+            0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
+            70% { box-shadow: 0 0 0 12px rgba(37, 211, 102, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+        }
+        .whatsapp-float { animation: pulse-green 2s infinite; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <!-- شريط التنقل العلوي (Header) المزود بتيكيت اللوجو المفرغ بدون خلفية -->
+    <header class="bg-white shadow-md sticky top-0 z-40">
+        <div class="container mx-auto px-4 py-2 flex flex-wrap justify-between items-center gap-3">
+            
+            <!-- اللوجو المفرغ (التيكيت فقط) واسم المتجر -->
+            <div class="flex items-center gap-3">
+                <label class="cursor-pointer group relative flex items-center" title="اضغط لرفع صورة التيكيت وسيتم إزالة خلفيتها البيضاء تلقائياً">
+                    <img id="header-logo-img" src="" alt="DOKAN Harimi Ticket Logo" class="h-16 w-auto object-contain ticket-cutout group-hover:scale-105 transition duration-300">
+                    <input type="file" accept="image/*" class="hidden" onchange="uploadCustomLogo(event)">
+                </label>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <h1 id="store-title" class="text-2xl font-extrabold text-slate-900 tracking-wide leading-tight">دكان حريمي</h1>
+                        <span class="text-xs font-extrabold px-2 py-0.5 rounded bg-red-700 text-white tracking-wider">DH</span>
+                    </div>
+                    <span id="store-subtitle" class="text-xs font-semibold text-gray-500 block">DOKAN Harimi | متخصصون في الجينز والجبردين النسائي</span>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-2 sm:gap-2.5 flex-wrap">
+                <!-- زر تحويل اللغة (عربي / English) -->
+                <button onclick="toggleLanguage()" class="bg-amber-50 text-amber-900 border border-amber-300 px-3 py-1.5 rounded-full hover:bg-amber-100 transition flex items-center gap-1.5 text-xs sm:text-sm font-extrabold shadow-sm">
+                    <i class="fa-solid fa-globe text-blue-900"></i>
+                    <span id="lang-btn-text">English</span>
+                </button>
+
+                <!-- أيقونات السوشيال ميديا العلوية -->
+                <div class="hidden sm:flex items-center gap-1.5 border-x px-2.5 border-gray-200">
+                    <a id="header-wa" href="#" target="_blank" class="w-8 h-8 rounded-full bg-green-50 text-green-600 hover:bg-green-500 hover:text-white flex items-center justify-center transition shadow-sm">
+                        <i class="fa-brands fa-whatsapp text-base"></i>
+                    </a>
+                    <a id="header-ig" href="#" target="_blank" class="w-8 h-8 rounded-full bg-pink-50 text-pink-600 hover:bg-gradient-to-tr hover:from-yellow-500 hover:via-pink-500 hover:to-purple-600 hover:text-white flex items-center justify-center transition shadow-sm">
+                        <i class="fa-brands fa-instagram text-base"></i>
+                    </a>
+                    <a id="header-fb" href="#" target="_blank" class="w-8 h-8 rounded-full bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white flex items-center justify-center transition shadow-sm">
+                        <i class="fa-brands fa-facebook-f text-base"></i>
+                    </a>
+                </div>
+
+                <!-- زر حساب العميل -->
+                <button onclick="openAccountModal()" id="account-btn" class="bg-gray-100 text-slate-900 border border-gray-200 px-3 py-2 rounded-full hover:bg-gray-200 transition flex items-center gap-1.5 text-xs sm:text-sm font-bold shadow-sm">
+                    <i class="fa-solid fa-user-circle text-base text-red-700"></i>
+                    <span id="account-btn-text">حساب العميل</span>
+                </button>
+
+                <!-- زر جدول المقاسات -->
+                <button onclick="toggleSizeGuide()" class="bg-blue-50 text-blue-900 border border-blue-200 px-3 py-2 rounded-full hover:bg-blue-100 transition flex items-center gap-1.5 text-xs sm:text-sm font-bold">
+                    <i class="fa-solid fa-ruler-horizontal"></i>
+                    <span id="size-guide-btn-text" class="hidden md:inline">جدول المقاسات (28 - 48)</span>
+                </button>
+
+                <!-- زر السلة -->
+                <button onclick="toggleCart()" class="relative bg-slate-900 text-white px-4 py-2 rounded-full hover:bg-slate-800 transition flex items-center gap-2 shadow-sm text-xs sm:text-sm">
+                    <i class="fa-solid fa-cart-shopping text-red-400"></i>
+                    <span id="cart-btn-text">السلة</span>
+                    <span id="cart-count" class="bg-red-600 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- بانر ترحيبي يظهر فيه التيكيت المفرغ بدون أي خلفية بيضاء -->
+    <section class="bg-gradient-to-l from-slate-900 via-blue-950 to-slate-900 text-white py-8 mb-8 border-b-4 border-red-700">
+        <div class="container mx-auto px-4 flex flex-col md:flex-row items-center justify-center gap-6 text-center md:text-start">
+            <!-- التيكيت المفرغ يطفو مباشرة فوق الخلفية الكحلي مع شفافية الفتحة الذهبية -->
+            <img id="hero-logo-img" src="" alt="DOKAN Harimi Ticket Cutout" class="h-32 w-auto object-contain ticket-cutout hover:rotate-3 transition duration-300">
+            <div>
+                <h2 id="hero-title" class="text-2xl md:text-4xl font-bold mb-2">أهلاً بكِ في دكان حريمي - DOKAN Harimi</h2>
+                <p id="hero-subtitle" class="text-blue-200 mb-4 text-sm md:text-base">تشكيلة كاملة (وايد ليج، سوبر وايد، دراجون، بالون كمر مقلوب، وبوي فريند) بمقاسات عادية وخاصة وبيج سايز من 28 حتى 48.</p>
+                <div class="inline-flex flex-wrap justify-center md:justify-start gap-3 bg-white/10 px-5 py-2 rounded-full text-xs sm:text-sm">
+                    <span><i class="fa-solid fa-rotate text-red-400 mx-1"></i> <span id="badge-1">عرض 360 درجة (وجه - جنب - ظهر)</span></span>
+                    <span><i class="fa-solid fa-maximize text-green-400 mx-1"></i> <span id="badge-2">متوفر مقاسات خاصة وبيج سايز حتى 48</span></span>
+                    <span><i class="fa-solid fa-ruler text-amber-300 mx-1"></i> <span id="badge-3">جدول مقاسات دقيق بالسنتيمتر</span></span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- قسم المنتجات والبحث والفلترة -->
+    <main class="container mx-auto px-4 mb-16">
+        <div class="flex flex-wrap justify-between items-center mb-4 gap-2">
+            <div>
+                <h3 id="catalog-title" class="text-2xl font-bold border-s-4 border-red-700 ps-3 text-slate-900">كتالوج موديلات دكان حريمي (17 موديل)</h3>
+                <p id="catalog-hint" class="text-xs text-gray-600 mt-1 ps-4 font-semibold">💡 اضغطي على صورة أي بنطلون لتدويره ومشاهدة (وجه البنطلون، الجنب، والظهر بالجيوب الخلفية)</p>
+            </div>
+            <button onclick="toggleSizeGuide()" class="text-sm text-blue-900 hover:underline font-semibold flex items-center gap-1 bg-blue-50 px-3 py-1.5 rounded-lg border border-blue-200">
+                <i class="fa-solid fa-circle-question text-red-700"></i> <span id="catalog-size-link">دليل المقاسات بالسنتيمتر (من 28 إلى 48)</span>
+            </button>
+        </div>
+
+        <!-- لوحة البحث والفلترة المتقدمة (حسب القصة + حسب المقاس من 28 إلى 48) -->
+        <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-200 mb-6 space-y-3.5">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-center">
+                
+                <!-- حقل البحث الفوري -->
+                <div class="lg:col-span-4 relative">
+                    <i class="fa-solid fa-magnifying-glass absolute top-1/2 -translate-y-1/2 start-3.5 text-gray-400"></i>
+                    <input type="text" id="search-input" oninput="handleSearch(this.value)" placeholder="ابحثي (وايد ليج، دراجون، بالون كمر مقلوب، جبردين)..." class="w-full ps-10 pe-9 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-blue-900 focus:bg-white text-sm transition">
+                    <button id="clear-search-btn" onclick="clearSearch()" class="hidden absolute top-1/2 -translate-y-1/2 end-3 text-gray-400 hover:text-red-500">
+                        <i class="fa-solid fa-circle-xmark"></i>
+                    </button>
+                </div>
+
+                <!-- أزرار الفلترة حسب القصة -->
+                <div class="lg:col-span-8 flex flex-wrap items-center gap-1.5">
+                    <span id="filter-label" class="text-xs font-bold text-gray-500 me-1"><i class="fa-solid fa-filter text-red-700"></i> القصة/النوع:</span>
+                    <div id="category-filters" class="flex flex-wrap gap-1.5"></div>
+                </div>
+            </div>
+
+            <!-- صف الفلترة حسب المقاس (28 إلى 48) -->
+            <div class="flex flex-wrap items-center justify-between gap-2 pt-3 border-t border-gray-100">
+                <div class="flex flex-wrap items-center gap-1.5">
+                    <span id="size-filter-label" class="text-xs font-bold text-gray-500 me-1"><i class="fa-solid fa-ruler-combined text-red-700"></i> اختاري مقاسك لعرض المتاح:</span>
+                    <div id="size-filters" class="flex flex-wrap gap-1.5"></div>
+                </div>
+
+                <!-- عداد النتائج وزر إعادة الضبط -->
+                <div class="flex items-center gap-3 text-xs text-gray-500 ms-auto">
+                    <span id="results-count-text" class="font-bold text-slate-900"></span>
+                    <button id="reset-filters-btn" onclick="resetFilters()" class="hidden text-red-600 hover:underline font-bold flex items-center gap-1">
+                        <i class="fa-solid fa-rotate-left"></i> <span id="reset-filters-text">إلغاء الفلاتر</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- شبكة عرض المنتجات -->
+        <div id="products-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
+    </main>
+
+    <!-- نافذة تسجيل الدخول / إنشاء حساب العميل -->
+    <div id="account-modal" class="fixed inset-0 bg-black bg-opacity-70 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 relative shadow-2xl">
+            <button onclick="closeAccountModal()" class="absolute top-4 end-4 text-gray-400 hover:text-red-500 text-xl"><i class="fa-solid fa-xmark"></i></button>
+            
+            <div class="text-center mb-6">
+                <img id="acc-logo-img" src="" class="h-20 w-auto mx-auto mb-2 object-contain ticket-cutout">
+                <h3 id="account-modal-title" class="text-xl font-extrabold text-slate-900">حساب العميل الخاص</h3>
+                <p id="account-modal-desc" class="text-xs text-gray-500 mt-1">سجلي بياناتك مرة واحدة لطلب المنتجات فوراً دون إعادة كتابتها في كل مرة.</p>
+            </div>
+
+            <div class="space-y-3.5">
+                <div>
+                    <label id="lbl-acc-name" class="block text-xs font-bold text-gray-700 mb-1">الاسم بالكامل:</label>
+                    <input type="text" id="acc-name" placeholder="مثال: مريم أحمد" class="w-full p-2.5 border rounded-lg focus:outline-none focus:border-blue-900 text-sm">
+                </div>
+                <div>
+                    <label id="lbl-acc-phone" class="block text-xs font-bold text-gray-700 mb-1">رقم الموبايل (يدعم واتساب):</label>
+                    <input type="tel" id="acc-phone" placeholder="010xxxxxxxx" class="w-full p-2.5 border rounded-lg focus:outline-none focus:border-blue-900 text-sm">
+                </div>
+                <div>
+                    <label id="lbl-acc-gov" class="block text-xs font-bold text-gray-700 mb-1">المحافظة الأساسية:</label>
+                    <select id="acc-gov" class="w-full p-2.5 border rounded-lg bg-white focus:outline-none focus:border-blue-900 text-sm font-semibold"></select>
+                </div>
+                <div>
+                    <label id="lbl-acc-address" class="block text-xs font-bold text-gray-700 mb-1">العنوان بالتفصيل (الشارع، رقم العمارة، الدور):</label>
+                    <textarea id="acc-address" rows="2" placeholder="اكتبي العنوان بالتفصيل هنا..." class="w-full p-2.5 border rounded-lg focus:outline-none focus:border-blue-900 text-sm"></textarea>
+                </div>
+
+                <div class="pt-2 flex gap-2">
+                    <button onclick="saveCustomerAccount()" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-2.5 rounded-xl transition shadow text-sm">
+                        <i class="fa-solid fa-floppy-disk mx-1"></i> <span id="btn-save-acc">حفظ وتفعيل الحساب</span>
+                    </button>
+                    <button id="logout-btn" onclick="logoutCustomerAccount()" class="hidden bg-red-100 hover:bg-red-200 text-red-600 font-bold px-4 py-2.5 rounded-xl transition text-sm" title="Logout">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة تدوير الموديل (أمام - جنب - ظهر - خامة) -->
+    <div id="product-gallery-modal" class="fixed inset-0 bg-black bg-opacity-75 z-50 hidden flex items-center justify-center p-3 md:p-6">
+        <div class="bg-white rounded-2xl max-w-5xl w-full max-h-[95vh] overflow-y-auto shadow-2xl relative grid grid-cols-1 md:grid-cols-12 overflow-hidden">
+            
+            <button onclick="closeGalleryModal()" class="absolute top-3 end-3 z-20 bg-white hover:bg-red-500 hover:text-white text-gray-800 w-9 h-9 rounded-full flex items-center justify-center shadow-lg transition">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+
+            <!-- القسم الأيمن: منصة دوران البنطلون -->
+            <div class="md:col-span-7 bg-gray-100 p-4 flex flex-col justify-between">
+                
+                <div class="flex flex-wrap justify-between items-center mb-2 bg-white p-2 rounded-xl shadow-sm gap-2">
+                    <span class="text-xs font-extrabold text-slate-900"><i class="fa-solid fa-arrows-spin mx-1 text-red-700"></i> <span id="modal-current-angle-lbl">زاوية الرؤية الحالية:</span></span>
+                    <div class="flex gap-1" id="top-angle-pills"></div>
+                </div>
+
+                <div class="relative h-80 sm:h-96 bg-white rounded-xl overflow-hidden shadow-inner border border-gray-200 flex items-center justify-center">
+                    <img id="modal-main-img" src="" alt="Jeans Angle" class="w-full h-full object-contain animate-angle">
+                    
+                    <span id="modal-angle-badge" class="absolute top-3 start-3 bg-slate-900 text-white text-xs font-bold px-3.5 py-1.5 rounded-full shadow-md"></span>
+
+                    <label class="absolute bottom-3 end-3 bg-gray-900/80 hover:bg-blue-900 text-white text-[11px] px-3 py-1.5 rounded-lg cursor-pointer shadow flex items-center gap-1.5 transition">
+                        <i class="fa-solid fa-upload text-yellow-300"></i>
+                        <span id="modal-upload-lbl">جرب رفع صورتك الحقيقية لهذه الزاوية</span>
+                        <input type="file" accept="image/*" class="hidden" onchange="uploadCustomAngleImage(event)">
+                    </label>
+
+                    <button onclick="prevImage()" class="absolute right-2 top-1/2 -translate-y-1/2 bg-white hover:bg-slate-900 hover:text-white text-slate-900 w-10 h-10 rounded-full flex items-center justify-center shadow-lg transition">
+                        <i class="fa-solid fa-rotate-right"></i>
+                    </button>
+                    <button onclick="nextImage()" class="absolute left-2 top-1/2 -translate-y-1/2 bg-white hover:bg-slate-900 hover:text-white text-slate-900 w-10 h-10 rounded-full flex items-center justify-center shadow-lg transition">
+                        <i class="fa-solid fa-rotate-left"></i>
+                    </button>
+                </div>
+
+                <div class="bg-slate-900 text-white p-3.5 rounded-xl mt-3 shadow-sm border-s-4 border-red-600">
+                    <div class="flex items-center gap-2 font-bold text-sm text-amber-300 mb-1">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <span id="angle-title-explain">تفاصيل هذه الزاوية:</span>
+                    </div>
+                    <p id="angle-desc-explain" class="text-xs text-gray-200 leading-relaxed"></p>
+                </div>
+
+                <div class="mt-3">
+                    <p class="text-xs text-gray-600 font-bold mb-2"><i class="fa-solid fa-camera-rotate mx-1 text-red-700"></i> <span id="modal-thumbs-hint">اضغطي لتدوير البنطلون ومشاهدة جميع الجوانب:</span></p>
+                    <div id="modal-thumbnails" class="grid grid-cols-4 gap-2"></div>
+                </div>
+            </div>
+
+            <!-- القسم الأيسر: بيانات الموديل والمقاسات -->
+            <div class="md:col-span-5 p-6 flex flex-col justify-between bg-white">
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span id="modal-tag-badge" class="text-xs bg-red-50 text-red-800 border border-red-200 font-bold px-2.5 py-1 rounded-full">DOKAN Harimi - 360°</span>
+                    </div>
+                    <h3 id="modal-product-name" class="text-xl font-extrabold text-gray-800 mt-2 mb-1"></h3>
+                    <p id="modal-product-price" class="text-2xl font-black text-blue-900 mb-4"></p>
+
+                    <div class="bg-gray-50 p-3.5 rounded-xl border border-gray-200 mb-5 text-xs space-y-2 text-gray-600">
+                        <h4 class="font-bold text-gray-800 text-sm mb-1"><i class="fa-solid fa-clipboard-check text-red-700 mx-1"></i> <span id="modal-specs-title">مواصفات القصة والخامة:</span></h4>
+                        <p id="modal-product-desc" class="leading-relaxed text-gray-700 font-semibold"></p>
+                        <div class="border-t pt-2 mt-2 space-y-1">
+                            <p id="modal-spec-1">🔹 <strong>الوجه الأمامي:</strong> تقفيل ممتاز يضبط منطقة البطن والخصر.</p>
+                            <p id="modal-spec-2">🔹 <strong>القصة الجانبية:</strong> خياطة جانبية مزدوجة مستقيمة تمنح الساق مظهراً ممشوقاً.</p>
+                            <p id="modal-spec-3">🔹 <strong>الظهر (الخلف):</strong> قصة حجر مريحة وجيوب خلفية مرفوعة بتصميم متناسق.</p>
+                        </div>
+                    </div>
+
+                    <div class="mb-6">
+                        <div class="flex justify-between items-center mb-2">
+                            <span id="modal-choose-size-lbl" class="text-sm font-bold text-gray-700">اختاري المقاس المتاح لهذا الموديل:</span>
+                            <button onclick="toggleSizeGuide()" class="text-xs text-blue-700 hover:underline font-semibold flex items-center gap-1">
+                                <i class="fa-solid fa-ruler-horizontal"></i> <span id="modal-size-guide-link">جدول المقاسات بالـ سم</span>
+                            </button>
+                        </div>
+                        <div id="modal-sizes" class="flex flex-wrap gap-2"></div>
+                    </div>
+                </div>
+
+                <div class="border-t pt-4">
+                    <button id="modal-add-btn" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 rounded-xl shadow-lg transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-cart-plus text-red-400"></i> <span id="modal-add-btn-text">أضف هذا الموديل إلى السلة</span>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- نافذة جدول المقاسات الموسع (من مقاس 28 حتى مقاس 48 للخاص والبيج سايز) -->
+    <div id="size-guide-modal" class="fixed inset-0 bg-black bg-opacity-60 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-5xl w-full max-h-[90vh] overflow-y-auto shadow-2xl p-6 relative">
+            <div class="flex justify-between items-center border-b pb-4 mb-4">
+                <div>
+                    <h3 class="text-xl font-extrabold text-slate-900"><i class="fa-solid fa-ruler-combined mx-2 text-red-700"></i><span id="sg-title">دليل مقاسات «دكان حريمي» الشامل (من 28 حتى 48 بيج سايز)</span></h3>
+                    <p id="sg-subtitle" class="text-xs text-gray-500 mt-1">جميع القياسات الموضحة بالجدول مقاسة بالسنتيمتر (سم) وتشمل المقاسات العادية والخاصة والبيج سايز</p>
+                </div>
+                <button onclick="toggleSizeGuide()" class="text-gray-400 hover:text-red-500 text-2xl"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <div class="overflow-x-auto mb-6">
+                <table class="w-full text-sm text-center border-collapse">
+                    <thead>
+                        <tr class="bg-slate-900 text-white">
+                            <th id="th-size" class="p-2.5 border">المقاس</th>
+                            <th id="th-cat" class="p-2.5 border bg-red-800">الفئة</th>
+                            <th id="th-waist" class="p-2.5 border">محيط الوسط (سم)</th>
+                            <th id="th-hips" class="p-2.5 border">محيط الهانش (سم)</th>
+                            <th id="th-rise" class="p-2.5 border">طول الحجر (سم)</th>
+                            <th id="th-thigh" class="p-2.5 border">عرض الفخذ/الرجل (سم)</th>
+                            <th id="th-inseam" class="p-2.5 border">طول الرجل الداخلي</th>
+                            <th id="th-length" class="p-2.5 border">الطول الكلي</th>
+                            <th id="th-weight" class="p-2.5 border bg-slate-800">الوزن التقريبي</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200 font-semibold text-xs sm:text-sm">
+                        <tr class="hover:bg-blue-50"><td class="p-2.5 border font-extrabold text-blue-900 bg-gray-50">28</td><td class="p-2.5 border text-gray-500">عادي</td><td class="p-2.5 border">66 - 70</td><td class="p-2.5 border">88 - 92</td><td class="p-2.5 border">27</td><td class="p-2.5 border">50 - 52</td><td class="p-2.5 border">74</td><td class="p-2.5 border">100</td><td class="p-2.5 border text-gray-600">50 - 57 kg</td></tr>
+                        <tr class="hover:bg-blue-50"><td class="p-2.5 border font-extrabold text-blue-900 bg-gray-50">30</td><td class="p-2.5 border text-gray-500">عادي</td><td class="p-2.5 border">71 - 75</td><td class="p-2.5 border">93 - 97</td><td class="p-2.5 border">28</td><td class="p-2.5 border">53 - 55</td><td class="p-2.5 border">75</td><td class="p-2.5 border">101</td><td class="p-2.5 border text-gray-600">58 - 65 kg</td></tr>
+                        <tr class="hover:bg-blue-50"><td class="p-2.5 border font-extrabold text-blue-900 bg-gray-50">32</td><td class="p-2.5 border text-gray-500">عادي</td><td class="p-2.5 border">76 - 80</td><td class="p-2.5 border">98 - 102</td><td class="p-2.5 border">29</td><td class="p-2.5 border">56 - 58</td><td class="p-2.5 border">75</td><td class="p-2.5 border">102</td><td class="p-2.5 border text-gray-600">66 - 73 kg</td></tr>
+                        <tr class="hover:bg-blue-50"><td class="p-2.5 border font-extrabold text-blue-900 bg-gray-50">34</td><td class="p-2.5 border text-blue-700">عادي / خاص</td><td class="p-2.5 border">81 - 86</td><td class="p-2.5 border">103 - 108</td><td class="p-2.5 border">30</td><td class="p-2.5 border">59 - 62</td><td class="p-2.5 border">76</td><td class="p-2.5 border">103</td><td class="p-2.5 border text-gray-600">74 - 80 kg</td></tr>
+                        <tr class="hover:bg-blue-50"><td class="p-2.5 border font-extrabold text-blue-900 bg-gray-50">36</td><td class="p-2.5 border text-blue-700">عادي / خاص</td><td class="p-2.5 border">87 - 92</td><td class="p-2.5 border">109 - 114</td><td class="p-2.5 border">31</td><td class="p-2.5 border">63 - 66</td><td class="p-2.5 border">76</td><td class="p-2.5 border">104</td><td class="p-2.5 border text-gray-600">81 - 88 kg</td></tr>
+                        <tr class="hover:bg-blue-50"><td class="p-2.5 border font-extrabold text-blue-900 bg-gray-50">38</td><td class="p-2.5 border text-blue-700">عادي / خاص</td><td class="p-2.5 border">93 - 98</td><td class="p-2.5 border">115 - 120</td><td class="p-2.5 border">32</td><td class="p-2.5 border">67 - 70</td><td class="p-2.5 border">77</td><td class="p-2.5 border">105</td><td class="p-2.5 border text-gray-600">89 - 96 kg</td></tr>
+                        <tr class="hover:bg-blue-50 bg-amber-50/40"><td class="p-2.5 border font-extrabold text-amber-900 bg-amber-100/60">40</td><td class="p-2.5 border text-amber-800 font-bold">خاص / بيج سايز</td><td class="p-2.5 border">99 - 104</td><td class="p-2.5 border">121 - 126</td><td class="p-2.5 border">33</td><td class="p-2.5 border">71 - 74</td><td class="p-2.5 border">77</td><td class="p-2.5 border">105</td><td class="p-2.5 border text-gray-700">97 - 104 kg</td></tr>
+                        <tr class="hover:bg-blue-50 bg-amber-50/40"><td class="p-2.5 border font-extrabold text-amber-900 bg-amber-100/60">42</td><td class="p-2.5 border text-amber-800 font-bold">خاص / بيج سايز</td><td class="p-2.5 border">105 - 110</td><td class="p-2.5 border">127 - 132</td><td class="p-2.5 border">34</td><td class="p-2.5 border">75 - 78</td><td class="p-2.5 border">77</td><td class="p-2.5 border">106</td><td class="p-2.5 border text-gray-700">105 - 112 kg</td></tr>
+                        <tr class="hover:bg-blue-50 bg-amber-50/40"><td class="p-2.5 border font-extrabold text-amber-900 bg-amber-100/60">44</td><td class="p-2.5 border text-amber-800 font-bold">خاص / بيج سايز</td><td class="p-2.5 border">111 - 116</td><td class="p-2.5 border">133 - 138</td><td class="p-2.5 border">35</td><td class="p-2.5 border">79 - 82</td><td class="p-2.5 border">78</td><td class="p-2.5 border">106</td><td class="p-2.5 border text-gray-700">113 - 120 kg</td></tr>
+                        <tr class="hover:bg-blue-50 bg-red-50/40"><td class="p-2.5 border font-extrabold text-red-900 bg-red-100/60">46</td><td class="p-2.5 border text-red-800 font-bold">بيج سايز</td><td class="p-2.5 border">117 - 123</td><td class="p-2.5 border">139 - 145</td><td class="p-2.5 border">36</td><td class="p-2.5 border">83 - 86</td><td class="p-2.5 border">78</td><td class="p-2.5 border">107</td><td class="p-2.5 border text-gray-700">121 - 130 kg</td></tr>
+                        <tr class="hover:bg-blue-50 bg-red-50/40"><td class="p-2.5 border font-extrabold text-red-900 bg-red-100/60">48</td><td class="p-2.5 border text-red-800 font-bold">بيج سايز</td><td class="p-2.5 border">124 - 130</td><td class="p-2.5 border">146 - 152</td><td class="p-2.5 border">37</td><td class="p-2.5 border">87 - 90</td><td class="p-2.5 border">78</td><td class="p-2.5 border">107</td><td class="p-2.5 border text-gray-700">131 - 140 kg</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="mt-5 text-end">
+                <button onclick="toggleSizeGuide()" id="sg-close-btn" class="bg-slate-900 text-white px-6 py-2 rounded-lg font-bold hover:bg-slate-800 transition">إغلاق الجدول</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- القائمة الجانبية للسلة وإتمام الطلب -->
+    <div id="cart-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex justify-end">
+        <div class="bg-white w-full max-w-lg h-full overflow-y-auto p-6 flex flex-col justify-between shadow-2xl">
+            <div>
+                <div class="flex justify-between items-center border-b pb-4 mb-4">
+                    <h3 class="text-xl font-bold text-slate-900"><i class="fa-solid fa-cart-flatbed mx-2 text-red-700"></i><span id="cart-drawer-title">سلة مشتريات دكان حريمي</span></h3>
+                    <button onclick="toggleCart()" class="text-gray-400 hover:text-red-500 text-2xl"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+
+                <div id="cart-account-notice" class="bg-blue-50 border border-blue-200 text-blue-900 p-3 rounded-xl mb-4 text-xs flex justify-between items-center">
+                    <span id="notice-text"></span>
+                    <button onclick="openAccountModal()" id="cart-acc-btn" class="bg-slate-900 text-white px-3 py-1 rounded-lg font-bold">حسابي</button>
+                </div>
+
+                <div id="cart-items" class="space-y-4 max-h-52 overflow-y-auto pe-1 mb-5"></div>
+
+                <div class="bg-gray-50 p-4 rounded-xl border border-gray-200 mb-5">
+                    <h4 class="font-bold mb-3 text-gray-700"><i class="fa-solid fa-location-dot text-red-700 mx-1"></i> <span id="cart-ship-title">بيانات التوصيل والشحن</span></h4>
+                    <div class="space-y-3">
+                        <input type="text" id="cust-name" placeholder="الاسم بالكامل" class="w-full p-2.5 border rounded-lg focus:outline-none focus:border-blue-900 text-sm">
+                        <input type="tel" id="cust-phone" placeholder="رقم الموبايل (يدعم واتساب)" class="w-full p-2.5 border rounded-lg focus:outline-none focus:border-blue-900 text-sm">
+                        <div>
+                            <label id="lbl-ship-gov" class="block text-xs text-gray-500 mb-1">اختر المحافظة لحساب تكلفة الشحن تلقائياً:</label>
+                            <select id="shipping-gov" onchange="updateTotals()" class="w-full p-2.5 border rounded-lg bg-white focus:outline-none focus:border-blue-900 text-sm font-semibold"></select>
+                        </div>
+                        <input type="text" id="cust-address" placeholder="العنوان بالتفصيل (الشارع، رقم العقار، الدور)" class="w-full p-2.5 border rounded-lg focus:outline-none focus:border-blue-900 text-sm">
+                    </div>
+                </div>
+
+                <div class="bg-gray-50 p-4 rounded-xl border border-gray-200 mb-5">
+                    <h4 class="font-bold mb-3 text-gray-700"><i class="fa-solid fa-credit-card text-red-700 mx-1"></i> <span id="cart-pay-title">طريقة الدفع</span></h4>
+                    <div class="grid grid-cols-2 gap-2 text-sm">
+                        <label class="border p-2.5 rounded-lg flex items-center gap-2 cursor-pointer bg-white hover:border-blue-900">
+                            <input type="radio" name="payment" value="cod" checked onchange="showPaymentInfo(this.value)">
+                            <span><i class="fa-solid fa-hand-holding-dollar text-green-600"></i> <span id="pay-opt-1">عند الاستلام</span></span>
+                        </label>
+                        <label class="border p-2.5 rounded-lg flex items-center gap-2 cursor-pointer bg-white hover:border-blue-900">
+                            <input type="radio" name="payment" value="wallet" onchange="showPaymentInfo(this.value)">
+                            <span><i class="fa-solid fa-wallet text-red-600"></i> <span id="pay-opt-2">محفظة إلكترونية</span></span>
+                        </label>
+                        <label class="border p-2.5 rounded-lg flex items-center gap-2 cursor-pointer bg-white hover:border-blue-900">
+                            <input type="radio" name="payment" value="instapay" onchange="showPaymentInfo(this.value)">
+                            <span><i class="fa-solid fa-mobile-screen-button text-purple-600"></i> <span id="pay-opt-3">إنستا باي</span></span>
+                        </label>
+                        <label class="border p-2.5 rounded-lg flex items-center gap-2 cursor-pointer bg-white hover:border-blue-900">
+                            <input type="radio" name="payment" value="card" onchange="showPaymentInfo(this.value)">
+                            <span><i class="fa-brands fa-cc-visa text-blue-600"></i> <span id="pay-opt-4">فيزا / فوري</span></span>
+                        </label>
+                    </div>
+                    <div id="payment-details" class="mt-3 text-xs text-blue-800 bg-blue-50 p-2.5 rounded hidden"></div>
+                </div>
+            </div>
+
+            <div class="border-t pt-4 bg-white">
+                <div class="space-y-1 text-sm mb-4">
+                    <div class="flex justify-between"><span id="lbl-subtotal" class="text-gray-500">قيمة المنتجات:</span><span class="font-bold"><span id="subtotal-price">0</span> <span class="currency-lbl">ج.م</span></span></div>
+                    <div class="flex justify-between"><span id="lbl-shipping" class="text-gray-500">مصاريف الشحن:</span><span class="font-bold text-blue-900"><span id="shipping-price">0</span> <span class="currency-lbl">ج.م</span></span></div>
+                    <div class="flex justify-between text-lg font-extrabold border-t pt-2 mt-2"><span id="lbl-total">الإجمالي الكلي:</span><span class="text-green-600"><span id="total-price">0</span> <span class="currency-lbl">ج.م</span></span></div>
+                </div>
+                <button onclick="checkoutOrder()" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-xl shadow-lg transition flex justify-center items-center gap-2">
+                    <i class="fa-brands fa-whatsapp text-xl"></i> <span id="btn-checkout-text">تأكيد وإرسال الطلب عبر واتساب</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- زر واتساب العائم -->
+    <a id="floating-wa" href="#" target="_blank" class="whatsapp-float fixed bottom-6 right-6 z-40 bg-green-500 hover:bg-green-600 text-white px-4 py-3 rounded-full shadow-2xl flex items-center gap-2 transition transform hover:scale-105">
+        <i class="fa-brands fa-whatsapp text-2xl"></i>
+        <span id="float-wa-text" class="font-bold text-sm">تواصلي معنا</span>
+    </a>
+
+    <!-- التذييل (Footer) المزود بتيكيت اللوجو المفرغ بدون خلفية -->
+    <footer class="bg-slate-950 text-white py-10 text-center border-t-4 border-red-700">
+        <div class="container mx-auto px-4">
+            <img id="footer-logo-img" src="" alt="DOKAN Harimi Ticket Logo" class="h-28 w-auto mx-auto mb-3 object-contain ticket-cutout">
+            <h4 class="font-extrabold text-xl mb-1 tracking-wide">دكان حريمي - DOKAN Harimi</h4>
+            <p id="footer-desc" class="text-gray-300 text-sm mb-5">تابعينا على صفحاتنا الرسمية لمشاهدة أحدث كوليكشن جينز وجبردين حريمي والعروض اليومية</p>
+            
+            <div class="flex justify-center items-center gap-4 mb-6">
+                <a id="footer-wa" href="#" target="_blank" class="flex items-center gap-2 bg-green-600 hover:bg-green-500 text-white px-4 py-2 rounded-full text-sm font-bold transition shadow">
+                    <i class="fa-brands fa-whatsapp text-lg"></i> <span>WhatsApp</span>
+                </a>
+                <a id="footer-ig" href="#" target="_blank" class="flex items-center gap-2 bg-gradient-to-tr from-yellow-500 via-pink-500 to-purple-600 hover:opacity-90 text-white px-4 py-2 rounded-full text-sm font-bold transition shadow">
+                    <i class="fa-brands fa-instagram text-lg"></i> <span>Instagram</span>
+                </a>
+                <a id="footer-fb" href="#" target="_blank" class="flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-full text-sm font-bold transition shadow">
+                    <i class="fa-brands fa-facebook-f text-lg"></i> <span>Facebook</span>
+                </a>
+            </div>
+
+            <p id="footer-copy" class="text-gray-400 text-xs border-t border-slate-800 pt-4">جميع الحقوق محفوظة © 2026 | DOKAN Harimi متخصصون في الجينز النسائي</p>
+        </div>
+    </footer>
+
+    <!-- كود الجافاسكريبت الشامل مع نظام تفريغ خلفية تيكيت اللوجو -->
+    <script>
+        // =========================================================================
+        // 1. توليد التيكيت المفرغ تماماً بدون خلفية بيضاء وبدقة Vector 100%
+        // حتى الفتحة داخل الحلقة الذهبية العلوية مفرغة (شفافة) باستخدام fill-rule="evenodd"
+        // =========================================================================
+        function generateTransparentTicketSVG() {
+            const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="16 16 228 374" width="100%" height="100%">
+                <defs>
+                    <linearGradient id="goldRing" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#fef08a"/>
+                        <stop offset="45%" stop-color="#eab308"/>
+                        <stop offset="100%" stop-color="#713f12"/>
+                    </linearGradient>
+                </defs>
+                <!-- جسم التيكت الكحلي المفرغ مع ثقب شفاف حقيقي في مكان الحلقة الذهبية -->
+                <path fill-rule="evenodd" clip-rule="evenodd" d="
+                    M 65 20 L 195 20 Q 210 20 210 35 L 210 45 L 225 45 Q 240 45 240 60 L 240 365 Q 240 385 220 385 L 40 385 Q 20 385 20 365 L 20 60 Q 20 45 35 45 L 50 45 L 50 35 Q 50 20 65 20 Z
+                    M 130 39 A 13 13 0 1 0 130 65 A 13 13 0 1 0 130 39 Z
+                " fill="#222933" stroke="#334155" stroke-width="1.2"/>
+                
+                <!-- الحلقة المعدنية الذهبية المفرغة من الوسط -->
+                <path fill-rule="evenodd" clip-rule="evenodd" d="
+                    M 130 32 A 20 20 0 1 1 129.99 32 Z
+                    M 130 40 A 12 12 0 1 0 130.01 40 Z
+                " fill="url(#goldRing)" stroke="#422006" stroke-width="1.2"/>
+
+                <!-- حروف DH الحمراء المتداخلة كما في التيكيت الأصلي -->
+                <g fill="#b91c2c">
+                    <text x="60" y="246" font-family="Georgia, 'Times New Roman', serif" font-size="165" font-weight="bold">D</text>
+                    <text x="122" y="246" font-family="Georgia, 'Times New Roman', serif" font-size="165" font-weight="bold">H</text>
+                </g>
+                <!-- القوس الأحمر الملتف حول الحروف -->
+                <path d="M 55 120 C 30 175 110 275 205 260 C 235 255 235 215 220 195 C 245 230 240 285 190 285 C 100 285 25 185 55 120 Z" fill="#b91c2c" stroke="#222933" stroke-width="2.5"/>
+
+                <!-- كلمة DOKAN Harimi بالأبيض في أسفل التيكت -->
+                <text x="130" y="325" font-family="Georgia, 'Times New Roman', serif" font-size="36" font-weight="bold" fill="#ffffff" text-anchor="middle" letter-spacing="1.5">DOKAN</text>
+                <text x="130" y="362" font-family="Georgia, 'Times New Roman', serif" font-size="33" font-weight="bold" fill="#ffffff" text-anchor="middle" letter-spacing="1">Harimi</text>
+            </svg>`;
+            return "data:image/svg+xml;utf8," + encodeURIComponent(svg);
+        }
+
+        // =========================================================================
+        // 2. دالة قص وتفريغ الخلفية البيضاء تلقائياً من ملف الصورة المرفق
+        // (تقص حدود التيكيت الخارجية + تفرغ الثقب داخل الحلقة الذهبية)
+        // =========================================================================
+        function createCutoutTicketFromImage(imageUrl) {
+            const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="195 125 606 905" width="100%" height="100%">
+                <defs>
+                    <mask id="ticketCutoutMask">
+                        <rect x="0" y="0" width="996" height="1152" fill="black"/>
+                        <!-- السماح بظهور منطقة التيكيت فقط بحوافها المنحنية -->
+                        <path d="M 328 138 L 668 138 Q 703 138 703 172 L 703 196 L 748 196 Q 792 196 792 242 L 792 965 Q 792 1015 742 1015 L 254 1015 Q 204 1015 204 965 L 204 242 Q 204 196 248 196 L 293 196 L 293 172 Q 293 138 328 138 Z" fill="white"/>
+                        <!-- تفريغ الثقب الأبيض داخل الحلقة الذهبية ليصبح شفافاً -->
+                        <circle cx="498" cy="213" r="27" fill="black"/>
+                    </mask>
+                </defs>
+                <image href="${imageUrl}" width="996" height="1152" mask="url(#ticketCutoutMask)"/>
+            </svg>`;
+            return "data:image/svg+xml;utf8," + encodeURIComponent(svg);
+        }
+
+        const DEFAULT_LOGO_SVG = generateTransparentTicketSVG();
+
+        function applyLogoToPage(srcUrl) {
+            ['header-logo-img', 'hero-logo-img', 'footer-logo-img', 'acc-logo-img'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.src = srcUrl;
+            });
+        }
+
+        function loadSavedLogo() {
+            const savedLogo = localStorage.getItem('dokan_custom_logo_cutout');
+            if (savedLogo) {
+                applyLogoToPage(savedLogo);
+                return;
+            }
+            // عرض التيكيت المفرغ الفوري أولاً، ثم فحص وجود ملف الصورة الأصلي لتفريغه وعرضه
+            applyLogoToPage(DEFAULT_LOGO_SVG);
+
+            const testImg = new Image();
+            testImg.onload = function() {
+                applyLogoToPage(createCutoutTicketFromImage("IMG-20260917-WA0004.jpg"));
+            };
+            testImg.src = "IMG-20260917-WA0004.jpg";
+        }
+
+        function uploadCustomLogo(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const cutoutDataUrl = createCutoutTicketFromImage(e.target.result);
+                localStorage.setItem('dokan_custom_logo_cutout', cutoutDataUrl);
+                applyLogoToPage(cutoutDataUrl);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        let currentLang = 'ar';
+        let currentFilter = 'all';
+        let currentSizeFilter = 'all';
+        let searchQuery = '';
+
+        const SOCIAL_LINKS = {
+            whatsappNumber: "201000000000",
+            facebookUrl: "https://www.facebook.com/dokkanharimi",
+            instagramUrl: "https://www.instagram.com/dokkanharimi"
+        };
+
+        const categoriesList = [
+            { id: 'all', ar: 'الكل (17)', en: 'All (17)' },
+            { id: 'wide', ar: 'وايد ليج', en: 'Wide Leg' },
+            { id: 'superwide', ar: 'سوبر وايد ليج', en: 'Super Wide' },
+            { id: 'boyfriend', ar: 'بوي فريند', en: 'Boyfriend' },
+            { id: 'dragon', ar: 'دراجون (عادي ومطرز)', en: 'Dragon Cut' },
+            { id: 'balloon', ar: 'بالون كمر مقلوب', en: 'Balloon Cut' },
+            { id: 'gabardine', ar: 'جبردين', en: 'Gabardine' },
+            { id: 'plus', ar: 'مقاسات خاصة وبيج سايز', en: 'Special & Big Size' }
+        ];
+
+        const availableSizesList = [28, 30, 32, 34, 36, 38, 40, 42, 44, 46, 48];
+
+        const i18n = {
+            ar: {
+                langBtn: "English",
+                storeTitle: "دكان حريمي",
+                storeSubtitle: "DOKAN Harimi | متخصصون في الجينز والجبردين النسائي",
+                accountBtn: "حساب العميل",
+                welcomeUser: "أهلاً، ",
+                sizeGuideBtn: "جدول المقاسات (28 - 48)",
+                cartBtn: "السلة",
+                heroTitle: "أهلاً بكِ في دكان حريمي - DOKAN Harimi",
+                heroSubtitle: "تشكيلة كاملة (وايد ليج، سوبر وايد، دراجون، بالون كمر مقلوب، وبوي فريند) بمقاسات عادية وخاصة وبيج سايز من 28 حتى 48.",
+                badge1: "عرض 360 درجة (وجه - جنب - ظهر)",
+                badge2: "متوفر مقاسات خاصة وبيج سايز حتى 48",
+                badge3: "جدول مقاسات دقيق بالسنتيمتر",
+                catalogTitle: "كتالوج موديلات دكان حريمي (17 موديل)",
+                catalogHint: "💡 اضغطي على صورة أي بنطلون لتدويره ومشاهدة (وجه البنطلون، الجنب، والظهر بالجيوب الخلفية)",
+                catalogSizeLink: "دليل المقاسات بالسنتيمتر (من 28 إلى 48)",
+                searchPlaceholder: "ابحثي (وايد ليج، دراجون، بالون كمر مقلوب، جبردين)...",
+                filterLabel: "القصة/النوع:",
+                sizeFilterLabel: "اختاري مقاسك لعرض المتاح:",
+                allSizesBtn: "كل المقاسات",
+                showingAll: "عرض جميع الموديلات",
+                showingCount: "الموديلات المطابقة:",
+                resetFilters: "إلغاء الفلاتر وعرض الكل",
+                noResultsTitle: "لا توجد موديلات مطابقة لهذا الفلتر",
+                noResultsSub: "جربي اختيار مقاس آخر أو قصة أخرى، أو اضغطي بالأسفل لعرض جميع البنطلونات.",
+                cardBrand: "DOKAN Harimi",
+                cardHover: "اضغطي لتدوير البنطلون (أمام - جنب - ظهر)",
+                card360Badge: "عرض 360° (4 زوايا)",
+                chooseSize: "اختر المقاس المتاح:",
+                addToCart: "أضف إلى السلة",
+                addedToCart: "تمت الإضافة للسلة",
+                currency: "ج.م",
+                selectSizeAlert: "⚠️ من فضلك اختاري المقاس أولاً قبل إضافة البنطلون إلى السلة.",
+                modalCurrentAngle: "زاوية الرؤية الحالية:",
+                modalUpload: "جرب رفع صورتك الحقيقية لهذه الزاوية",
+                modalThumbsHint: "اضغطي لتدوير البنطلون ومشاهدة جميع الجوانب:",
+                modalTag: "DOKAN Harimi - معاينة شاملة 360°",
+                modalSpecsTitle: "مواصفات القصة والخامة:",
+                modalSpec1: "🔹 <strong>الوجه الأمامي:</strong> تقفيل ممتاز يضبط منطقة البطن والخصر.",
+                modalSpec2: "🔹 <strong>القصة الجانبية:</strong> خياطة جانبية مزدوجة مستقيمة تمنح الساق مظهراً ممشوقاً.",
+                modalSpec3: "🔹 <strong>الظهر (الخلف):</strong> قصة حجر مريحة وجيوب خلفية مرفوعة بتصميم متناسق.",
+                modalAddBtn: "أضف هذا الموديل إلى السلة",
+                explainPrefix: "شرح",
+                sgTitle: "دليل مقاسات «دكان حريمي» الشامل (من 28 حتى 48 بيج سايز)",
+                sgSubtitle: "جميع القياسات الموضحة بالجدول مقاسة بالسنتيمتر (سم) وتشمل المقاسات العادية والخاصة والبيج سايز",
+                thSize: "المقاس", thCat: "الفئة", thWaist: "محيط الوسط (سم)", thHips: "محيط الهانش (سم)", thRise: "طول الحجر (سم)", thThigh: "عرض الفخذ (سم)", thInseam: "طول الرجل الداخلي", thLength: "الطول الكلي", thWeight: "الوزن التقريبي",
+                sgClose: "إغلاق الجدول",
+                accTitleNew: "إنشاء حساب عميل جديد",
+                accTitleEdit: "إدارة حسابك الشخصي",
+                accDesc: "سجلي بياناتك مرة واحدة لطلب المنتجات فوراً دون إعادة كتابتها في كل مرة.",
+                lblName: "الاسم بالكامل:", phName: "مثال: مريم أحمد",
+                lblPhone: "رقم الموبايل (يدعم واتساب):",
+                lblGov: "المحافظة الأساسية:",
+                lblAddress: "العنوان بالتفصيل (الشارع، رقم العمارة، الدور):", phAddress: "اكتبي العنوان بالتفصيل هنا...",
+                btnSaveAcc: "حفظ وتفعيل الحساب",
+                accSavedAlert: "✅ تم حفظ حسابك بنجاح! سيتم ملء بياناتك تلقائياً.",
+                accFillAlert: "⚠️ من فضلك استكملي جميع بيانات الحساب.",
+                logoutConfirm: "هل أنتِ متأكدة من تسجيل الخروج وحذف البيانات المحفوظة؟",
+                cartTitle: "سلة مشتريات دكان حريمي",
+                noticeGuest: "مرحباً! يمكنك تسجيل حساب لملء البيانات تلقائياً في كل طلب.",
+                noticeLogged: "✅ مسجلة بحساب: ",
+                myAccountBtn: "حسابي",
+                emptyCart: "السلة فارغة حالياً",
+                sizeWord: "مقاس", qtyWord: "الكمية",
+                shipTitle: "بيانات التوصيل والشحن",
+                lblShipGov: "اختر المحافظة لحساب تكلفة الشحن تلقائياً:",
+                govOptions: [
+                    { val: "0", text: "-- اختر المحافظة / المنطقة --" },
+                    { val: "50", text: "القاهرة والجيزة (50 ج.م)" },
+                    { val: "60", text: "الإسكندرية (60 ج.م)" },
+                    { val: "65", text: "محافظات الدلتا والقناة (65 ج.م)" },
+                    { val: "85", text: "محافظات الصعيد (85 ج.م)" },
+                    { val: "110", text: "البحر الأحمر وسيناء ومطروح (110 ج.م)" }
+                ],
+                payTitle: "طريقة الدفع",
+                pay1: "عند الاستلام", pay2: "محفظة إلكترونية", pay3: "إنستا باي", pay4: "فيزا / فوري",
+                payInfoWallet: "يرجى التحويل على رقم محفظة دكان حريمي: <strong>01000000000</strong> وإرسال صورة التحويل على واتساب بعد تأكيد الطلب.",
+                payInfoInstapay: "عنوان الدفع على إنستا باي الخاص بمتجر دكان حريمي: <strong>dokkanharimi@instapay</strong>",
+                payInfoCard: "سيتم تحويلك لبوابة الدفع الإلكتروني الآمنة (Paymob / Fawry Pay) فور تأكيد الطلب.",
+                lblSubtotal: "قيمة المنتجات:", lblShipping: "مصاريف الشحن:", lblTotal: "الإجمالي الكلي:",
+                btnCheckout: "تأكيد وإرسال الطلب عبر واتساب",
+                floatWa: "تواصلي معنا",
+                footerDesc: "تابعينا على صفحاتنا الرسمية لمشاهدة أحدث كوليكشن جينز وجبردين حريمي والعروض اليومية",
+                footerCopy: "جميع الحقوق محفوظة © 2026 | DOKAN Harimi متخصصون في الجينز النسائي",
+                svgFront: "1. وجه البنطلون (الأمام)",
+                svgSide: "2. صورة جانبية (تدوير 90°)",
+                svgBack: "3. ظهر البنطلون (تدوير 180°)",
+                svgZoom: "4. زووم الخامة والكمر والتقفيل",
+                svgFrontCut: "القصة الأمامية", svgBackPocket: "بروز الجيب الخلفي",
+                svgZoomTitle: "فحص الخامة والتقفيل عن قرب",
+                svgZoomSub1: "✔ خامة قطنية ممتازة مع ليكرا مريحة",
+                svgZoomSub2: "✔ غرز خياطة مزدوجة وتقفيل عالي الجودة"
+            },
+            en: {
+                langBtn: "العربية",
+                storeTitle: "DOKAN Harimi",
+                storeSubtitle: "Women's Denim & Gabardine Specialists",
+                accountBtn: "My Account",
+                welcomeUser: "Hi, ",
+                sizeGuideBtn: "Size Guide (28 - 48)",
+                cartBtn: "Cart",
+                heroTitle: "Welcome to DOKAN Harimi - Women's Jeans & Gabardine",
+                heroSubtitle: "Full collection (Wide Leg, Super Wide, Dragon, Inverted-Waist Balloon & Boyfriend) in Regular, Special & Big Sizes from 28 up to 48.",
+                badge1: "360° View (Front - Side - Back)",
+                badge2: "Special & Big Sizes up to 48",
+                badge3: "Accurate CM Size Guide",
+                catalogTitle: "DOKAN Harimi Catalog (17 Models)",
+                catalogHint: "💡 Click on any pants image to rotate and inspect (Front, Side Profile, Back Pockets & Fabric)",
+                catalogSizeLink: "Size Guide in CM (Sizes 28 to 48)",
+                searchPlaceholder: "Search (Wide Leg, Dragon, Balloon, Gabardine, Big Size)...",
+                filterLabel: "Fit / Type:",
+                sizeFilterLabel: "Select your size to filter:",
+                allSizesBtn: "All Sizes",
+                showingAll: "Showing all models",
+                showingCount: "Matching models:",
+                resetFilters: "Reset Filters & Show All",
+                noResultsTitle: "No matching models found",
+                noResultsSub: "Try selecting another size or fit, or click below to view all available models.",
+                cardBrand: "DOKAN Harimi",
+                cardHover: "Click to rotate (Front - Side - Back)",
+                card360Badge: "360° View (4 Angles)",
+                chooseSize: "Select Available Size:",
+                addToCart: "Add to Cart",
+                addedToCart: "Added to Cart",
+                currency: "EGP",
+                selectSizeAlert: "⚠️ Please select a size first before adding to cart.",
+                modalCurrentAngle: "Current Viewing Angle:",
+                modalUpload: "Try uploading your own photo for this angle",
+                modalThumbsHint: "Click below to rotate and view all angles:",
+                modalTag: "DOKAN Harimi - 360° Inspection",
+                modalSpecsTitle: "Cut & Fabric Specifications:",
+                modalSpec1: "🔹 <strong>Front View:</strong> Flattering waist construction for tummy control.",
+                modalSpec2: "🔹 <strong>Side Profile:</strong> Straight double-stitched outseam for a sleek leg line.",
+                modalSpec3: "🔹 <strong>Back View:</strong> Comfortable rise with lifted, well-proportioned back pockets.",
+                modalAddBtn: "Add This Model to Cart",
+                explainPrefix: "Details of",
+                sgTitle: "DOKAN Harimi Full Size Chart (Sizes 28 to 48 Big Size)",
+                sgSubtitle: "All measurements are in Centimeters (CM) covering Regular, Special, and Big Sizes",
+                thSize: "Size", thCat: "Category", thWaist: "Waist (cm)", thHips: "Hips (cm)", thRise: "Front Rise (cm)", thThigh: "Thigh Width (cm)", thInseam: "Inseam (cm)", thLength: "Total Length", thWeight: "Approx. Weight",
+                sgClose: "Close Chart",
+                accTitleNew: "Create Customer Account",
+                accTitleEdit: "Manage Your Account",
+                accDesc: "Save your delivery details once to auto-fill future orders instantly.",
+                lblName: "Full Name:", phName: "e.g., Mariam Ahmed",
+                lblPhone: "Mobile Number (WhatsApp):",
+                lblGov: "Governorate / Region:",
+                lblAddress: "Detailed Address (Street, Building, Floor):", phAddress: "Enter your full address here...",
+                btnSaveAcc: "Save & Activate Account",
+                accSavedAlert: "✅ Account saved! Your delivery details will auto-fill on checkout.",
+                accFillAlert: "⚠️ Please fill in all account fields.",
+                logoutConfirm: "Are you sure you want to log out and clear saved info?",
+                cartTitle: "DOKAN Harimi Shopping Cart",
+                noticeGuest: "Welcome! Save an account to auto-fill your delivery info.",
+                noticeLogged: "✅ Logged in as: ",
+                myAccountBtn: "Account",
+                emptyCart: "Your cart is currently empty",
+                sizeWord: "Size", qtyWord: "Qty",
+                shipTitle: "Delivery & Shipping Info",
+                lblShipGov: "Select Governorate to calculate shipping automatically:",
+                govOptions: [
+                    { val: "0", text: "-- Select Governorate / Region --" },
+                    { val: "50", text: "Cairo & Giza (50 EGP)" },
+                    { val: "60", text: "Alexandria (60 EGP)" },
+                    { val: "65", text: "Delta & Canal Governorates (65 EGP)" },
+                    { val: "85", text: "Upper Egypt (85 EGP)" },
+                    { val: "110", text: "Red Sea, Sinai & Matrouh (110 EGP)" }
+                ],
+                payTitle: "Payment Method",
+                pay1: "Cash on Delivery", pay2: "Mobile Wallet", pay3: "InstaPay", pay4: "Visa / Fawry",
+                payInfoWallet: "Please transfer to Dokkan Harimi Wallet: <strong>01000000000</strong> and send screenshot via WhatsApp.",
+                payInfoInstapay: "Dokkan Harimi InstaPay Address: <strong>dokkanharimi@instapay</strong>",
+                payInfoCard: "You will be redirected to the secure payment gateway (Paymob / Fawry Pay) upon confirmation.",
+                lblSubtotal: "Subtotal:", lblShipping: "Shipping Fee:", lblTotal: "Total Amount:",
+                btnCheckout: "Confirm & Send Order via WhatsApp",
+                floatWa: "Chat with Us",
+                footerDesc: "Follow our official pages for the latest women's denim & gabardine collections",
+                footerCopy: "All Rights Reserved © 2026 | DOKAN Harimi Women's Jeans",
+                svgFront: "1. Front View",
+                svgSide: "2. Side Profile (90°)",
+                svgBack: "3. Back View (180°)",
+                svgZoom: "4. Fabric & Stitching Zoom",
+                svgFrontCut: "Front Cut", svgBackPocket: "Back Pocket",
+                svgZoomTitle: "Close-up Fabric & Quality Check",
+                svgZoomSub1: "✔ Premium Cotton with Comfortable Lycra",
+                svgZoomSub2: "✔ Double Stitching & High-Quality Finish"
+            }
+        };
+
+        function generateJeansAngleSVG(angle, prod, modelTitle) {
+            const t = i18n[currentLang];
+            const colorHex = prod.colorHex;
+            const shadeHex = prod.shadeHex;
+            const cutType = prod.cutType;
+            const strokeCol = colorHex === '#f8fafc' ? '#475569' : '#1e293b';
+            const stitchCol = colorHex === '#f8fafc' ? '#94a3b8' : '#f59e0b';
+
+            let svgContent = '';
+            let legWidthBottom = cutType === 'superwide' ? 112 : (cutType === 'wide' || cutType === 'dragon' ? 92 : (cutType === 'balloon' ? 68 : 65));
+
+            if (angle === 'front') {
+                let waistSvg = `<path d="M 110 60 L 290 60 L 293 90 L 107 90 Z" fill="${colorHex}" stroke="${strokeCol}" stroke-width="3"/>`;
+                if (prod.specialFeature === 'elastic') {
+                    waistSvg += `<path d="M 110 66 L 290 66 M 110 74 L 290 74 M 110 82 L 290 82" stroke="${stitchCol}" stroke-width="2" stroke-dasharray="6,3"/>
+                                 <path d="M 195 75 Q 185 110 190 120 M 205 75 Q 215 110 210 120" fill="none" stroke="${strokeCol}" stroke-width="2.5"/>`;
+                } else if (prod.specialFeature === 'inverted') {
+                    waistSvg = `<path d="M 110 60 L 200 78 L 290 60 L 293 95 L 200 110 L 107 95 Z" fill="${shadeHex}" stroke="${strokeCol}" stroke-width="3"/>`;
+                } else {
+                    waistSvg += `<rect x="130" y="58" width="8" height="34" fill="${colorHex}" stroke="${strokeCol}" stroke-width="2"/>
+                                 <rect x="262" y="58" width="8" height="34" fill="${colorHex}" stroke="${strokeCol}" stroke-width="2"/>
+                                 <circle cx="200" cy="75" r="7" fill="#f59e0b" stroke="#78350f" stroke-width="2"/>`;
+                }
+
+                let bodyPath = cutType === 'balloon'
+                    ? `M 110 60 L 290 60 Q 335 230 ${205 + legWidthBottom} 430 L 210 430 L 200 175 L 190 430 L ${195 - legWidthBottom} 430 Q 65 230 110 60 Z`
+                    : `M 110 60 L 290 60 L ${205 + legWidthBottom} 430 L 210 430 L 200 175 L 190 430 L ${195 - legWidthBottom} 430 Z`;
+
+                svgContent = `
+                    <path d="${bodyPath}" fill="${colorHex}" stroke="${strokeCol}" stroke-width="3" stroke-linejoin="round"/>
+                    <ellipse cx="155" cy="240" rx="22" ry="90" fill="${shadeHex}" opacity="0.35"/>
+                    <ellipse cx="245" cy="240" rx="22" ry="90" fill="${shadeHex}" opacity="0.35"/>
+                    ${waistSvg}
+                    <path d="M 200 90 L 200 165 C 200 165 218 160 218 140 L 218 90" fill="none" stroke="${stitchCol}" stroke-width="2" stroke-dasharray="4,2"/>
+                    <path d="M 108 95 C 125 140 155 145 165 90" fill="none" stroke="${stitchCol}" stroke-width="2.5"/>
+                    <path d="M 292 95 C 275 140 245 145 235 90" fill="none" stroke="${stitchCol}" stroke-width="2.5"/>
+                    <rect x="115" y="15" width="170" height="28" rx="14" fill="#1e3a8a"/>
+                    <text x="200" y="34" font-family="Cairo, sans-serif" font-size="13" font-weight="bold" fill="#ffffff" text-anchor="middle">${t.svgFront}</text>
+                `;
+            } else if (angle === 'side') {
+                let sideBottomWidth = cutType === 'superwide' ? 110 : (cutType === 'wide' || cutType === 'dragon' ? 95 : 70);
+                svgContent = `
+                    <path d="M 155 60 L 245 60 C 265 120 260 180 ${200 + sideBottomWidth/2} 430 L ${200 - sideBottomWidth/2} 430 C 150 200 150 120 155 60 Z" fill="${colorHex}" stroke="${strokeCol}" stroke-width="3" stroke-linejoin="round"/>
+                    <path d="M 155 60 L 245 60 L 248 90 L 152 90 Z" fill="${colorHex}" stroke="${strokeCol}" stroke-width="3"/>
+                    <line x1="200" y1="90" x2="200" y2="430" stroke="${stitchCol}" stroke-width="2.5"/>
+                    <line x1="204" y1="90" x2="204" y2="430" stroke="${stitchCol}" stroke-width="1.5" stroke-dasharray="4,2"/>
+                    <path d="M 153 95 C 175 130 190 135 200 125" fill="none" stroke="${stitchCol}" stroke-width="2.5"/>
+                    <path d="M 218 125 L 248 125 L 245 180 L 218 175 Z" fill="${shadeHex}" opacity="0.3" stroke="${stitchCol}" stroke-width="2"/>
+                    <text x="95" y="245" font-family="Cairo, sans-serif" font-size="11" font-weight="bold" fill="#1e3a8a" text-anchor="middle">${t.svgFrontCut}</text>
+                    <text x="305" y="155" font-family="Cairo, sans-serif" font-size="11" font-weight="bold" fill="#1e3a8a" text-anchor="middle">${t.svgBackPocket}</text>
+                    <rect x="115" y="15" width="170" height="28" rx="14" fill="#047857"/>
+                    <text x="200" y="34" font-family="Cairo, sans-serif" font-size="13" font-weight="bold" fill="#ffffff" text-anchor="middle">${t.svgSide}</text>
+                `;
+            } else if (angle === 'back') {
+                let pocketEmbroidery = prod.specialFeature === 'embroidered'
+                    ? `<path d="M 130 140 Q 150 125 170 145 Q 150 165 130 155 M 230 140 Q 250 125 270 145 Q 250 165 230 155" fill="none" stroke="#fbbf24" stroke-width="3"/>
+                       <circle cx="150" cy="148" r="4" fill="#ef4444"/><circle cx="250" cy="148" r="4" fill="#ef4444"/>`
+                    : `<path d="M 122 145 Q 150 160 178 145 M 222 145 Q 250 160 278 145" fill="none" stroke="${stitchCol}" stroke-width="1.5"/>`;
+
+                svgContent = `
+                    <path d="M 110 60 L 290 60 L ${205 + legWidthBottom} 430 L 210 430 L 200 185 L 190 430 L ${195 - legWidthBottom} 430 Z" fill="${colorHex}" stroke="${strokeCol}" stroke-width="3" stroke-linejoin="round"/>
+                    <path d="M 110 60 L 290 60 L 293 90 L 107 90 Z" fill="${colorHex}" stroke="${strokeCol}" stroke-width="3"/>
+                    <!-- بادج تيكيت اللوجو DH الكحلي والأحمر على كمر البنطلون الخلفي -->
+                    <rect x="232" y="61" width="48" height="26" rx="3" fill="#222933" stroke="#ca8a04" stroke-width="1.5"/>
+                    <text x="256" y="75" font-family="Georgia, serif" font-size="11" font-weight="bold" fill="#dc2626" text-anchor="middle">DH</text>
+                    <text x="256" y="84" font-family="Georgia, serif" font-size="5.5" font-weight="bold" fill="#ffffff" text-anchor="middle">DOKAN</text>
+                    <path d="M 106 105 L 200 128 L 294 105" fill="none" stroke="${stitchCol}" stroke-width="2.5" stroke-dasharray="5,2"/>
+                    <line x1="200" y1="90" x2="200" y2="185" stroke="${stitchCol}" stroke-width="2.5"/>
+                    <polygon points="122,125 178,125 178,175 150,192 122,175" fill="${colorHex}" stroke="${stitchCol}" stroke-width="2.5"/>
+                    <polygon points="222,125 278,125 278,175 250,192 222,175" fill="${colorHex}" stroke="${stitchCol}" stroke-width="2.5"/>
+                    ${pocketEmbroidery}
+                    <rect x="110" y="15" width="180" height="28" rx="14" fill="#7c2d12"/>
+                    <text x="200" y="34" font-family="Cairo, sans-serif" font-size="13" font-weight="bold" fill="#ffffff" text-anchor="middle">${t.svgBack}</text>
+                `;
+            } else if (angle === 'zoom') {
+                svgContent = `
+                    <rect x="40" y="55" width="320" height="360" rx="16" fill="${colorHex}" stroke="${strokeCol}" stroke-width="3"/>
+                    <line x1="40" y1="175" x2="360" y2="175" stroke="${strokeCol}" stroke-width="4"/>
+                    <line x1="45" y1="162" x2="355" y2="162" stroke="${stitchCol}" stroke-width="3.5" stroke-dasharray="10,5"/>
+                    <line x1="45" y1="190" x2="355" y2="190" stroke="${stitchCol}" stroke-width="3.5" stroke-dasharray="10,5"/>
+                    <circle cx="195" cy="115" r="24" fill="#d97706" stroke="#78350f" stroke-width="4"/>
+                    <rect x="70" y="255" width="260" height="90" rx="12" fill="#ffffff" opacity="0.95" stroke="#1e3a8a" stroke-width="2"/>
+                    <text x="200" y="285" font-family="Cairo, sans-serif" font-size="14" font-weight="800" fill="#1e3a8a" text-anchor="middle">${t.svgZoomTitle}</text>
+                    <text x="200" y="310" font-family="Cairo, sans-serif" font-size="11.5" font-weight="bold" fill="#334155" text-anchor="middle">${t.svgZoomSub1}</text>
+                    <text x="200" y="330" font-family="Cairo, sans-serif" font-size="11.5" font-weight="bold" fill="#047857" text-anchor="middle">${t.svgZoomSub2}</text>
+                    <rect x="95" y="15" width="210" height="28" rx="14" fill="#6d28d9"/>
+                    <text x="200" y="34" font-family="Cairo, sans-serif" font-size="13" font-weight="bold" fill="#ffffff" text-anchor="middle">${t.svgZoom}</text>
+                `;
+            }
+
+            const fullSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 475" width="100%" height="100%">
+                <rect width="400" height="475" fill="#f1f5f9"/>
+                ${svgContent}
+                <text x="200" y="460" font-family="Cairo, sans-serif" font-size="12" font-weight="bold" fill="#1e293b" text-anchor="middle">${modelTitle}</text>
+            </svg>`;
+
+            return "data:image/svg+xml;utf8," + encodeURIComponent(fullSvg);
+        }
+
+        function createModelAngles(arFeature, enFeature) {
+            return [
+                { type: 'front', label: { ar: "1. وجه البنطلون (الأمام)", en: "1. Front View" }, short: { ar: "1. الأمام", en: "1. Front" }, explain: { ar: `الواجهة الأمامية: ${arFeature} مع تقفيل كمر ممتاز يضبط منطقة الخصر.`, en: `Front View: ${enFeature} with a clean waist finish.` } },
+                { type: 'side', label: { ar: "2. صورة من الجنب (90°)", en: "2. Side Profile (90°)" }, short: { ar: "2. الجنب", en: "2. Side" }, explain: { ar: "الزاوية الجانبية: توضح استقامة خط الخياطة الجانبي المزدوج ووسع الرجل من الجنب.", en: "Side Profile: Highlights the straight double-stitched side seam and leg width." } },
+                { type: 'back', label: { ar: "3. ظهر البنطلون (180°)", en: "3. Back View (180°)" }, short: { ar: "3. الظهر", en: "3. Back" }, explain: { ar: "ظهر البنطلون: يوضح تصميم الجيوب الخلفية وارتفاع الحجر المريح جداً في الجلوس مع تيكت DOKAN Harimi.", en: "Back View: Shows back pocket placement, comfortable high back rise, and DOKAN Harimi patch." } },
+                { type: 'zoom', label: { ar: "4. زووم الخامة والتقفيل", en: "4. Fabric Zoom" }, short: { ar: "4. الخامة", en: "4. Fabric" }, explain: { ar: "صورة مقربة لنسيج القماش: توضح جودة الخامة ومتانة الخياطة.", en: "Macro Zoom: Shows fabric weave quality and durable stitching." } }
+            ];
+        }
+
+        const productsData = [
+            {
+                id: 1, price: 650, colorHex: '#3b82f6', shadeHex: '#93c5fd', cutType: 'wide', tags: ['wide'],
+                sizes: [28, 30, 32, 34, 36, 38],
+                name: { ar: "بنطلون وايد ليج جينز (28 : 38)", en: "Wide Leg Jeans (28 : 38)" },
+                desc: { ar: "بنطلون وايد ليج جينز بقصة واسعة انسيابية، متوفر بمقاسات من 28 إلى 38.", en: "Flowy Wide Leg denim jeans, available in regular sizes 28 to 38." },
+                angles: createModelAngles("قصة وايد ليج جينز كلاسيكية", "Classic Wide Leg denim cut")
+            },
+            {
+                id: 2, price: 690, colorHex: '#2563eb', shadeHex: '#93c5fd', cutType: 'wide', tags: ['wide', 'plus'],
+                sizes: [34, 36, 38, 40, 42, 44],
+                name: { ar: "بنطلون وايد ليج جينز خاص (34 : 44)", en: "Special Size Wide Leg Jeans (34 : 44)" },
+                desc: { ar: "بنطلون وايد ليج جينز تلبيس خاص مريح، متوفر بمقاسات من 34 إلى 44.", en: "Special comfort fit Wide Leg jeans, available in sizes 34 to 44." },
+                angles: createModelAngles("تلبيس خاص مريح في منطقة الوسط والهانش", "Special comfort fit through waist and hips")
+            },
+            {
+                id: 3, price: 730, colorHex: '#1d4ed8', shadeHex: '#60a5fa', cutType: 'wide', tags: ['wide', 'plus'],
+                sizes: [40, 42, 44, 46, 48],
+                name: { ar: "بنطلون وايد ليج جينز بيج سايز (40 : 48)", en: "Big Size Wide Leg Jeans (40 : 48)" },
+                desc: { ar: "بنطلون وايد ليج جينز بيج سايز بتلبيس واسع ومريح جداً، مقاسات من 40 حتى 48.", en: "Plus size Wide Leg jeans with extra roomy fit, sizes 40 up to 48." },
+                angles: createModelAngles("قصة بيج سايز مخصصة للمقاسات الكبيرة حتى 48", "Plus-size tailored Wide Leg cut up to size 48")
+            },
+            {
+                id: 4, price: 650, colorHex: '#f8fafc', shadeHex: '#cbd5e1', cutType: 'wide', tags: ['wide', 'gabardine'],
+                sizes: [28, 30, 32, 34, 36, 38],
+                name: { ar: "بنطلون وايد ليج أبيض جبردين (28 : 38)", en: "White Gabardine Wide Leg (28 : 38)" },
+                desc: { ar: "بنطلون وايد ليج خامة جبردين قطن أبيض ناصع غير شفاف، مقاسات 28 إلى 38.", en: "Crisp white cotton Gabardine Wide Leg pants, sizes 28 to 38." },
+                angles: createModelAngles("جبردين أبيض ناصع بقصة وايد ليج", "Crisp white gabardine wide-leg cut")
+            },
+            {
+                id: 5, price: 650, colorHex: '#18181b', shadeHex: '#52525b', cutType: 'wide', tags: ['wide', 'gabardine'],
+                sizes: [28, 30, 32, 34, 36, 38],
+                name: { ar: "بنطلون وايد ليج أسود جبردين (28 : 38)", en: "Black Gabardine Wide Leg (28 : 38)" },
+                desc: { ar: "بنطلون وايد ليج جبردين أسود فاحم ثابت مع الغسيل، مقاسات من 28 إلى 38.", en: "Jet black fade-resistant Gabardine Wide Leg pants, sizes 28 to 38." },
+                angles: createModelAngles("جبردين أسود فاحم بقصة وايد ليج", "Deep black gabardine wide-leg cut")
+            },
+            {
+                id: 6, price: 690, colorHex: '#18181b', shadeHex: '#52525b', cutType: 'wide', tags: ['wide', 'gabardine', 'plus'],
+                sizes: [34, 36, 38, 40, 42, 44],
+                name: { ar: "بنطلون وايد ليج أسود جبردين خاص (34 : 44)", en: "Special Black Gabardine Wide Leg (34 : 44)" },
+                desc: { ar: "وايد ليج أسود خامة جبردين تلبيس خاص مريح، مقاسات من 34 إلى 44.", en: "Special size black Gabardine Wide Leg pants, sizes 34 to 44." },
+                angles: createModelAngles("جبردين أسود مقاسات خاصة مريحة", "Special size black gabardine comfort cut")
+            },
+            {
+                id: 7, price: 720, colorHex: '#09090b', shadeHex: '#3f3f46', cutType: 'wide', tags: ['wide', 'gabardine', 'plus'],
+                sizes: [40, 42, 44],
+                name: { ar: "بنطلون وايد ليج أسود جبردين بيج سايز (40 : 44)", en: "Big Size Black Gabardine Wide Leg (40 : 44)" },
+                desc: { ar: "وايد ليج أسود جبردين بيج سايز بتلبيس عريض ومريح، مقاسات 40 و 42 و 44.", en: "Big size black Gabardine Wide Leg pants, sizes 40, 42, and 44." },
+                angles: createModelAngles("جبردين أسود بيج سايز بتلبيس واسع", "Big size black gabardine extra-roomy cut")
+            },
+            {
+                id: 8, price: 640, colorHex: '#27272a', shadeHex: '#71717a', cutType: 'wide', specialFeature: 'elastic', tags: ['wide', 'gabardine'],
+                sizes: [32, 34, 36, 38, 40],
+                name: { ar: "بنطلون وايد ليج أسود استك جبردين (32 : 40)", en: "Elastic Waist Black Gabardine Wide Leg (32 : 40)" },
+                desc: { ar: "وايد ليج أسود جبردين بكمر استك ورباط مريح جداً للبطن، مقاسات من 32 إلى 40.", en: "Black Gabardine Wide Leg with comfortable elastic drawstring waist, sizes 32 to 40." },
+                angles: createModelAngles("كمر استك مرن ومريح بخامة جبردين أسود", "Flexible elastic waistband in black gabardine")
+            },
+            {
+                id: 9, price: 640, colorHex: '#2563eb', shadeHex: '#93c5fd', cutType: 'wide', specialFeature: 'elastic', tags: ['wide'],
+                sizes: [32, 34, 36, 38, 40],
+                name: { ar: "بنطلون وايد ليج أزرق استك جينز (32 : 40)", en: "Elastic Waist Blue Jeans Wide Leg (32 : 40)" },
+                desc: { ar: "وايد ليج جينز أزرق بكمر استك عملي ومريح في اللبس، مقاسات من 32 إلى 40.", en: "Blue denim Wide Leg jeans with soft elastic waist, sizes 32 to 40." },
+                angles: createModelAngles("كمر استك جينز أزرق عملي ومريح", "Blue denim with comfortable elastic waistband")
+            },
+            {
+                id: 10, price: 680, colorHex: '#38bdf8', shadeHex: '#bae6fd', cutType: 'superwide', tags: ['superwide', 'wide'],
+                sizes: [28, 30, 32, 34, 36, 38],
+                name: { ar: "بنطلون سوبر وايد ليج جينز (28 : 38)", en: "Super Wide Leg Jeans (28 : 38)" },
+                desc: { ar: "قصة سوبر وايد ليج جينز بوسع مضاعف وإطلالة تريندي مميزة، مقاسات من 28 إلى 38.", en: "Extra-wide Super Wide Leg denim jeans for a bold trendy look, sizes 28 to 38." },
+                angles: createModelAngles("قصة سوبر وايد بوسع رجل مضاعف وعصري", "Extra-wide Super Wide Leg silhouette")
+            },
+            {
+                id: 11, price: 670, colorHex: '#1e40af', shadeHex: '#60a5fa', cutType: 'dragon', tags: ['dragon'],
+                sizes: [28, 30, 32, 34, 36, 38],
+                name: { ar: "بنطلون دراجون جينز (28 : 38)", en: "Dragon Cut Jeans (28 : 38)" },
+                desc: { ar: "بنطلون جينز قصة دراجون الشهيرة بتفصيلة مميزة، متوفر بمقاسات من 28 إلى 38.", en: "Trendy Dragon Cut denim jeans, available in sizes 28 to 38." },
+                angles: createModelAngles("قصة دراجون جينز الأصلية", "Signature Dragon Cut denim style")
+            },
+            {
+                id: 12, price: 700, colorHex: '#1e3a8a', shadeHex: '#60a5fa', cutType: 'dragon', specialFeature: 'embroidered', tags: ['dragon'],
+                sizes: [28, 30, 32, 34, 36, 38],
+                name: { ar: "بنطلون دراجون ظهر مطرز جينز (28 : 38)", en: "Back-Embroidered Dragon Jeans (28 : 38)" },
+                desc: { ar: "بنطلون دراجون جينز بتطريز خلفي بارز ومميز على الجيوب، مقاسات من 28 إلى 38.", en: "Dragon Cut jeans featuring detailed back pocket embroidery, sizes 28 to 38." },
+                angles: createModelAngles("قصة دراجون مع تطريز بارز على الجيوب الخلفية", "Dragon Cut with intricate back pocket embroidery")
+            },
+            {
+                id: 13, price: 660, colorHex: '#60a5fa', shadeHex: '#1e3a8a', cutType: 'balloon', specialFeature: 'inverted', tags: ['balloon'],
+                sizes: [28, 30, 32, 34, 36, 38],
+                name: { ar: "بنطلون بالون كمر مقلوب جينز (28 : 38)", en: "Inverted-Waist Balloon Jeans (28 : 38)" },
+                desc: { ar: "بنطلون جينز قصة بالون بتصميم كمر مقلوب عصري، مقاسات من 28 إلى 38.", en: "Balloon fit jeans with trendy inverted V-waistband design, sizes 28 to 38." },
+                angles: createModelAngles("تصميم كمر مقلوب مع قصة رجل بالون", "Inverted waistband design with balloon leg cut")
+            },
+            {
+                id: 14, price: 620, colorHex: '#2563eb', shadeHex: '#93c5fd', cutType: 'boyfriend', tags: ['boyfriend'],
+                sizes: [30, 32, 34, 36, 38, 40],
+                name: { ar: "بنطلون بوي فريند جينز (30 : 40)", en: "Boyfriend Jeans (30 : 40)" },
+                desc: { ar: "بنطلون بوي فريند جينز مريح عند الفخذ وينزل بلمّة أنيقة، مقاسات من 30 إلى 40.", en: "Relaxed Boyfriend fit denim jeans, available in sizes 30 to 40." },
+                angles: createModelAngles("قصة بوي فريند جينز كلاسيكية مريحة", "Relaxed classic Boyfriend denim cut")
+            },
+            {
+                id: 15, price: 660, colorHex: '#1d4ed8', shadeHex: '#60a5fa', cutType: 'boyfriend', tags: ['boyfriend', 'plus'],
+                sizes: [34, 36, 38, 40, 42, 44],
+                name: { ar: "بنطلون بوي فريند خاص جينز (34 : 44)", en: "Special Size Boyfriend Jeans (34 : 44)" },
+                desc: { ar: "بنطلون بوي فريند جينز تلبيس خاص مريح للخصر والأرداف، مقاسات من 34 إلى 44.", en: "Special comfort size Boyfriend jeans, available in sizes 34 to 44." },
+                angles: createModelAngles("بوي فريند جينز تلبيس خاص مريح", "Special size Boyfriend fit")
+            },
+            {
+                id: 16, price: 620, colorHex: '#18181b', shadeHex: '#52525b', cutType: 'boyfriend', tags: ['boyfriend', 'gabardine'],
+                sizes: [28, 30, 32, 34, 36, 38],
+                name: { ar: "بنطلون بوي فريند أسود جبردين (28 : 38)", en: "Black Gabardine Boyfriend Pants (28 : 38)" },
+                desc: { ar: "بنطلون بوي فريند خامة جبردين أسود عملي وأنيق، متوفر بمقاسات من 28 إلى 38.", en: "Sleek black Gabardine Boyfriend pants, available in sizes 28 to 38." },
+                angles: createModelAngles("بوي فريند جبردين أسود فاحم", "Sleek black gabardine Boyfriend cut")
+            },
+            {
+                id: 17, price: 670, colorHex: '#09090b', shadeHex: '#3f3f46', cutType: 'boyfriend', tags: ['boyfriend', 'gabardine', 'plus'],
+                sizes: [36, 38, 40, 42, 44, 46],
+                name: { ar: "بنطلون بوي فريند أسود خاص جبردين (36 : 46)", en: "Special Black Gabardine Boyfriend (36 : 46)" },
+                desc: { ar: "بوي فريند أسود جبردين مقاسات خاصة وتلبيس مريح، متوفر بمقاسات من 36 حتى 46.", en: "Special size black Gabardine Boyfriend pants, sizes 36 up to 46." },
+                angles: createModelAngles("بوي فريند جبردين أسود مقاسات خاصة حتى 46", "Special size black gabardine Boyfriend up to size 46")
+            }
+        ];
+
+        let selectedSizes = {};
+        let cart = [];
+        let currentModalProductId = null;
+        let currentImageIndex = 0;
+        let customUploads = {};
+
+        function getLocalizedProduct(prod) {
+            const title = prod.name[currentLang];
+            const gallery = prod.angles.map((ang, idx) => {
+                const customKey = `${prod.id}_${idx}`;
+                return {
+                    label: ang.label[currentLang],
+                    shortLabel: ang.short[currentLang],
+                    url: customUploads[customKey] || generateJeansAngleSVG(ang.type, prod, `${title}`),
+                    explain: ang.explain[currentLang]
+                };
+            });
+            return {
+                id: prod.id,
+                cutType: prod.cutType,
+                tags: prod.tags,
+                name: title,
+                price: prod.price,
+                desc: prod.desc[currentLang],
+                sizes: prod.sizes,
+                img: gallery[0].url,
+                gallery: gallery
+            };
+        }
+
+        function renderFilterButtons() {
+            const container = document.getElementById('category-filters');
+            container.innerHTML = categoriesList.map(cat => `
+                <button onclick="setCategoryFilter('${cat.id}')" class="filter-btn ${currentFilter === cat.id ? 'active' : 'bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200'} border text-xs font-bold px-3 py-1.5 rounded-xl transition">
+                    ${cat[currentLang]}
+                </button>
+            `).join('');
+        }
+
+        function renderSizeFilterButtons() {
+            const t = i18n[currentLang];
+            const container = document.getElementById('size-filters');
+            const allBtn = `<button onclick="setSizeFilter('all')" class="size-filter-btn ${currentSizeFilter === 'all' ? 'active' : 'bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200'} border text-xs font-bold px-3 py-1 rounded-lg transition">${t.allSizesBtn}</button>`;
+            const sizeBtns = availableSizesList.map(sz => `
+                <button onclick="setSizeFilter(${sz})" class="size-filter-btn ${currentSizeFilter == sz ? 'active' : 'bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200'} border text-xs font-extrabold px-2.5 py-1 rounded-lg transition">
+                    ${sz}
+                </button>
+            `).join('');
+            container.innerHTML = allBtn + sizeBtns;
+        }
+
+        function setCategoryFilter(catId) {
+            currentFilter = catId;
+            renderFilterButtons();
+            renderProducts();
+        }
+
+        function setSizeFilter(sizeVal) {
+            currentSizeFilter = sizeVal;
+            if (sizeVal !== 'all') {
+                productsData.forEach(p => {
+                    if (p.sizes.includes(Number(sizeVal))) {
+                        selectedSizes[p.id] = String(sizeVal);
+                    }
+                });
+            }
+            renderSizeFilterButtons();
+            renderProducts();
+        }
+
+        function handleSearch(val) {
+            searchQuery = val.trim().toLowerCase();
+            const clearBtn = document.getElementById('clear-search-btn');
+            if (searchQuery.length > 0) clearBtn.classList.remove('hidden');
+            else clearBtn.classList.add('hidden');
+            renderProducts();
+        }
+
+        function clearSearch() {
+            document.getElementById('search-input').value = '';
+            handleSearch('');
+        }
+
+        function resetFilters() {
+            currentFilter = 'all';
+            currentSizeFilter = 'all';
+            clearSearch();
+            renderFilterButtons();
+            renderSizeFilterButtons();
+            renderProducts();
+        }
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'ar' ? 'en' : 'ar';
+            const htmlEl = document.getElementById('main-html');
+            htmlEl.lang = currentLang;
+            htmlEl.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+            applyTranslations();
+        }
+
+        function applyTranslations() {
+            const t = i18n[currentLang];
+            document.getElementById('lang-btn-text').innerText = t.langBtn;
+            document.getElementById('store-title').innerText = t.storeTitle;
+            document.getElementById('store-subtitle').innerText = t.storeSubtitle;
+            document.getElementById('size-guide-btn-text').innerText = t.sizeGuideBtn;
+            document.getElementById('cart-btn-text').innerText = t.cartBtn;
+
+            document.getElementById('hero-title').innerText = t.heroTitle;
+            document.getElementById('hero-subtitle').innerText = t.heroSubtitle;
+            document.getElementById('badge-1').innerText = t.badge1;
+            document.getElementById('badge-2').innerText = t.badge2;
+            document.getElementById('badge-3').innerText = t.badge3;
+
+            document.getElementById('catalog-title').innerText = t.catalogTitle;
+            document.getElementById('catalog-hint').innerText = t.catalogHint;
+            document.getElementById('catalog-size-link').innerText = t.catalogSizeLink;
+
+            document.getElementById('search-input').placeholder = t.searchPlaceholder;
+            document.getElementById('filter-label').innerHTML = `<i class="fa-solid fa-filter text-red-700"></i> ${t.filterLabel}`;
+            document.getElementById('size-filter-label').innerHTML = `<i class="fa-solid fa-ruler-combined text-red-700"></i> ${t.sizeFilterLabel}`;
+            document.getElementById('reset-filters-text').innerText = t.resetFilters;
+            renderFilterButtons();
+            renderSizeFilterButtons();
+
+            document.getElementById('modal-current-angle-lbl').innerText = t.modalCurrentAngle;
+            document.getElementById('modal-upload-lbl').innerText = t.modalUpload;
+            document.getElementById('modal-thumbs-hint').innerText = t.modalThumbsHint;
+            document.getElementById('modal-tag-badge').innerText = t.modalTag;
+            document.getElementById('modal-specs-title').innerText = t.modalSpecsTitle;
+            document.getElementById('modal-spec-1').innerHTML = t.modalSpec1;
+            document.getElementById('modal-spec-2').innerHTML = t.modalSpec2;
+            document.getElementById('modal-spec-3').innerHTML = t.modalSpec3;
+            document.getElementById('modal-choose-size-lbl').innerText = t.chooseSize;
+            document.getElementById('modal-size-guide-link').innerText = t.catalogSizeLink;
+            document.getElementById('modal-add-btn-text').innerText = t.modalAddBtn;
+
+            document.getElementById('sg-title').innerText = t.sgTitle;
+            document.getElementById('sg-subtitle').innerText = t.sgSubtitle;
+            document.getElementById('th-size').innerText = t.thSize;
+            document.getElementById('th-cat').innerText = t.thCat;
+            document.getElementById('th-waist').innerText = t.thWaist;
+            document.getElementById('th-hips').innerText = t.thHips;
+            document.getElementById('th-rise').innerText = t.thRise;
+            document.getElementById('th-thigh').innerText = t.thThigh;
+            document.getElementById('th-inseam').innerText = t.thInseam;
+            document.getElementById('th-length').innerText = t.thLength;
+            document.getElementById('th-weight').innerText = t.thWeight;
+            document.getElementById('sg-close-btn').innerText = t.sgClose;
+
+            document.getElementById('account-modal-desc').innerText = t.accDesc;
+            document.getElementById('lbl-acc-name').innerText = t.lblName;
+            document.getElementById('acc-name').placeholder = t.phName;
+            document.getElementById('lbl-acc-phone').innerText = t.lblPhone;
+            document.getElementById('lbl-acc-gov').innerText = t.lblGov;
+            document.getElementById('lbl-acc-address').innerText = t.lblAddress;
+            document.getElementById('acc-address').placeholder = t.phAddress;
+            document.getElementById('btn-save-acc').innerText = t.btnSaveAcc;
+
+            document.getElementById('cart-drawer-title').innerText = t.cartTitle;
+            document.getElementById('cart-acc-btn').innerText = t.myAccountBtn;
+            document.getElementById('cart-ship-title').innerText = t.shipTitle;
+            document.getElementById('cust-name').placeholder = t.lblName;
+            document.getElementById('cust-phone').placeholder = t.lblPhone;
+            document.getElementById('lbl-ship-gov').innerText = t.lblShipGov;
+            document.getElementById('cust-address').placeholder = t.phAddress;
+            document.getElementById('cart-pay-title').innerText = t.payTitle;
+            document.getElementById('pay-opt-1').innerText = t.pay1;
+            document.getElementById('pay-opt-2').innerText = t.pay2;
+            document.getElementById('pay-opt-3').innerText = t.pay3;
+            document.getElementById('pay-opt-4').innerText = t.pay4;
+            document.getElementById('lbl-subtotal').innerText = t.lblSubtotal;
+            document.getElementById('lbl-shipping').innerText = t.lblShipping;
+            document.getElementById('lbl-total').innerText = t.lblTotal;
+            document.getElementById('btn-checkout-text').innerText = t.btnCheckout;
+            document.getElementById('float-wa-text').innerText = t.floatWa;
+            document.getElementById('footer-desc').innerText = t.footerDesc;
+            document.getElementById('footer-copy').innerText = t.footerCopy;
+
+            document.querySelectorAll('.currency-lbl').forEach(el => el.innerText = t.currency);
+
+            const shipGov = document.getElementById('shipping-gov');
+            const accGov = document.getElementById('acc-gov');
+            const currentShipVal = shipGov.value || "0";
+            const currentAccVal = accGov.value || "0";
+
+            const govHtml = t.govOptions.map(o => `<option value="${o.val}">${o.text}</option>`).join('');
+            shipGov.innerHTML = govHtml;
+            accGov.innerHTML = govHtml;
+            shipGov.value = currentShipVal;
+            accGov.value = currentAccVal;
+
+            checkCustomerAccount();
+            renderProducts();
+            updateCartUI();
+
+            const selectedPay = document.querySelector('input[name="payment"]:checked');
+            if (selectedPay) showPaymentInfo(selectedPay.value);
+
+            if (currentModalProductId !== null && !document.getElementById('product-gallery-modal').classList.contains('hidden')) {
+                openGalleryModal(currentModalProductId, true);
+            }
+        }
+
+        function initSocialLinks() {
+            const msg = currentLang === 'ar' ? "أهلاً دكان حريمي، أريد الاستفسار عن موديلات الجينز والجبردين المتاحة" : "Hello DOKAN Harimi, I would like to inquire about available models";
+            const waUrl = `https://wa.me/${SOCIAL_LINKS.whatsappNumber}?text=${encodeURIComponent(msg)}`;
+            document.getElementById('header-wa').href = waUrl;
+            document.getElementById('footer-wa').href = waUrl;
+            document.getElementById('floating-wa').href = waUrl;
+            document.getElementById('header-ig').href = SOCIAL_LINKS.instagramUrl;
+            document.getElementById('footer-ig').href = SOCIAL_LINKS.instagramUrl;
+            document.getElementById('header-fb').href = SOCIAL_LINKS.facebookUrl;
+            document.getElementById('footer-fb').href = SOCIAL_LINKS.facebookUrl;
+        }
+
+        function checkCustomerAccount() {
+            const t = i18n[currentLang];
+            const savedAccount = localStorage.getItem('dokkan_customer');
+            const btnText = document.getElementById('account-btn-text');
+            const noticeText = document.getElementById('notice-text');
+
+            if (savedAccount) {
+                const customer = JSON.parse(savedAccount);
+                btnText.innerText = `${t.welcomeUser}${customer.name.split(' ')[0]}`;
+                noticeText.innerHTML = `${t.noticeLogged}<strong>${customer.name}</strong> (${customer.phone})`;
+                
+                document.getElementById('cust-name').value = customer.name;
+                document.getElementById('cust-phone').value = customer.phone;
+                document.getElementById('shipping-gov').value = customer.gov;
+                document.getElementById('cust-address').value = customer.address;
+                updateTotals();
+            } else {
+                btnText.innerText = t.accountBtn;
+                noticeText.innerHTML = t.noticeGuest;
+            }
+        }
+
+        function openAccountModal() {
+            const t = i18n[currentLang];
+            const savedAccount = localStorage.getItem('dokkan_customer');
+            if (savedAccount) {
+                const customer = JSON.parse(savedAccount);
+                document.getElementById('acc-name').value = customer.name;
+                document.getElementById('acc-phone').value = customer.phone;
+                document.getElementById('acc-gov').value = customer.gov;
+                document.getElementById('acc-address').value = customer.address;
+                document.getElementById('account-modal-title').innerText = t.accTitleEdit;
+                document.getElementById('logout-btn').classList.remove('hidden');
+            } else {
+                document.getElementById('acc-name').value = '';
+                document.getElementById('acc-phone').value = '';
+                document.getElementById('acc-gov').value = '0';
+                document.getElementById('acc-address').value = '';
+                document.getElementById('account-modal-title').innerText = t.accTitleNew;
+                document.getElementById('logout-btn').classList.add('hidden');
+            }
+            document.getElementById('account-modal').classList.remove('hidden');
+        }
+
+        function closeAccountModal() { document.getElementById('account-modal').classList.add('hidden'); }
+
+        function saveCustomerAccount() {
+            const t = i18n[currentLang];
+            const name = document.getElementById('acc-name').value.trim();
+            const phone = document.getElementById('acc-phone').value.trim();
+            const gov = document.getElementById('acc-gov').value;
+            const address = document.getElementById('acc-address').value.trim();
+
+            if (!name || !phone || gov == "0" || !address) {
+                alert(t.accFillAlert);
+                return;
+            }
+
+            localStorage.setItem('dokkan_customer', JSON.stringify({ name, phone, gov, address }));
+            alert(t.accSavedAlert);
+            checkCustomerAccount();
+            closeAccountModal();
+        }
+
+        function logoutCustomerAccount() {
+            const t = i18n[currentLang];
+            if (confirm(t.logoutConfirm)) {
+                localStorage.removeItem('dokkan_customer');
+                document.getElementById('cust-name').value = '';
+                document.getElementById('cust-phone').value = '';
+                document.getElementById('shipping-gov').value = '0';
+                document.getElementById('cust-address').value = '';
+                updateTotals();
+                checkCustomerAccount();
+                closeAccountModal();
+            }
+        }
+
+        function renderProducts() {
+            const t = i18n[currentLang];
+            const container = document.getElementById('products-container');
+            
+            const filteredProducts = productsData.filter(rawProd => {
+                const matchesCut = currentFilter === 'all' || (rawProd.tags && rawProd.tags.includes(currentFilter));
+                const matchesSize = currentSizeFilter === 'all' || rawProd.sizes.includes(Number(currentSizeFilter));
+                const matchesSearch = searchQuery === '' || 
+                    rawProd.name.ar.toLowerCase().includes(searchQuery) ||
+                    rawProd.name.en.toLowerCase().includes(searchQuery) ||
+                    rawProd.desc.ar.toLowerCase().includes(searchQuery) ||
+                    rawProd.desc.en.toLowerCase().includes(searchQuery);
+                return matchesCut && matchesSize && matchesSearch;
+            });
+
+            const countText = document.getElementById('results-count-text');
+            const resetBtn = document.getElementById('reset-filters-btn');
+            if (currentFilter === 'all' && currentSizeFilter === 'all' && searchQuery === '') {
+                countText.innerText = `${t.showingAll} (${productsData.length})`;
+                resetBtn.classList.add('hidden');
+            } else {
+                countText.innerHTML = `${t.showingCount} <strong>${filteredProducts.length}</strong>`;
+                resetBtn.classList.remove('hidden');
+            }
+
+            if (filteredProducts.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full bg-white rounded-2xl p-10 text-center border border-gray-200 shadow-sm">
+                        <i class="fa-solid fa-magnifying-glass-minus text-4xl text-gray-300 mb-3"></i>
+                        <h4 class="text-lg font-extrabold text-gray-700 mb-1">${t.noResultsTitle}</h4>
+                        <p class="text-xs text-gray-500 mb-4">${t.noResultsSub}</p>
+                        <button onclick="resetFilters()" class="bg-slate-900 text-white text-xs font-bold px-5 py-2.5 rounded-xl hover:bg-slate-800 transition shadow">
+                            <i class="fa-solid fa-rotate-left mx-1"></i> ${t.resetFilters}
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = filteredProducts.map(rawProd => {
+                const product = getLocalizedProduct(rawProd);
+                const activeSize = selectedSizes[product.id];
+                const isPlus = rawProd.tags.includes('plus');
+                const badgeColor = isPlus ? 'bg-red-700' : 'bg-slate-900';
+                const badgeLabel = isPlus ? (currentLang === 'ar' ? 'DH | مقاس خاص / بيج سايز' : 'DH | Special / Big Size') : 'DH | DOKAN Harimi';
+
+                return `
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition flex flex-col justify-between">
+                    <div>
+                        <div onclick="openGalleryModal(${product.id})" class="h-64 overflow-hidden bg-slate-50 relative cursor-pointer group p-2">
+                            <img src="${product.img}" alt="${product.name}" class="w-full h-full object-contain group-hover:scale-105 transition duration-300">
+                            <span class="absolute top-3 start-3 ${badgeColor} text-white text-[11px] font-bold px-2.5 py-1 rounded-full shadow">${badgeLabel}</span>
+                            
+                            <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition flex items-center justify-center p-2 text-center">
+                                <span class="bg-white text-slate-900 font-bold text-xs px-3 py-2 rounded-full shadow-lg flex items-center gap-1">
+                                    <i class="fa-solid fa-rotate text-red-700"></i> ${t.cardHover}
+                                </span>
+                            </div>
+                            <span class="absolute bottom-2 end-2 bg-slate-900/90 text-white text-[11px] px-2.5 py-1 rounded-full flex items-center gap-1 shadow">
+                                <i class="fa-solid fa-arrows-spin text-amber-300"></i> ${t.card360Badge}
+                            </span>
+                        </div>
+
+                        <div class="p-4">
+                            <h4 onclick="openGalleryModal(${product.id})" class="font-bold text-gray-800 text-base mb-1 cursor-pointer hover:text-red-700 transition">${product.name}</h4>
+                            <p class="text-blue-900 font-extrabold text-xl mb-3">${product.price} <span class="text-xs font-normal">${t.currency}</span></p>
+                            
+                            <div class="mb-4">
+                                <div class="flex justify-between items-center mb-1.5">
+                                    <span class="text-xs text-gray-500 font-semibold">${t.chooseSize}</span>
+                                    <button onclick="toggleSizeGuide()" class="text-xs text-red-700 hover:underline font-bold flex items-center gap-1">
+                                        <i class="fa-solid fa-ruler-horizontal"></i> ${ currentLang === 'ar' ? 'الجدول' : 'Chart' }
+                                    </button>
+                                </div>
+                                <div class="flex flex-wrap gap-1.5" id="sizes-${product.id}">
+                                    ${product.sizes.map(size => `
+                                        <button onclick="selectSize(${product.id}, '${size}', this)" class="size-btn ${activeSize == size ? 'active' : ''} border border-gray-300 text-gray-700 text-xs font-bold px-2.5 py-1.5 rounded-lg hover:border-blue-900 transition">
+                                            ${size}
+                                        </button>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="p-4 pt-0">
+                        <button onclick="addToCart(${product.id}, event)" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-semibold py-2.5 rounded-xl transition flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-cart-plus text-red-400"></i> ${t.addToCart}
+                        </button>
+                    </div>
+                </div>
+            `}).join('');
+        }
+
+        function openGalleryModal(productId, keepIndex = false) {
+            const t = i18n[currentLang];
+            currentModalProductId = productId;
+            if (!keepIndex) currentImageIndex = 0;
+
+            const rawProd = productsData.find(p => p.id === productId);
+            const product = getLocalizedProduct(rawProd);
+
+            document.getElementById('modal-product-name').innerText = product.name;
+            document.getElementById('modal-product-price').innerHTML = `${product.price} <span class="text-sm font-normal">${t.currency}</span>`;
+            document.getElementById('modal-product-desc').innerText = product.desc;
+
+            const activeSize = selectedSizes[productId];
+            const modalSizesContainer = document.getElementById('modal-sizes');
+            modalSizesContainer.innerHTML = product.sizes.map(size => `
+                <button onclick="selectSizeInModal(${productId}, '${size}', this)" class="size-btn ${activeSize == size ? 'active' : ''} border border-gray-300 text-gray-700 text-sm font-bold px-3.5 py-2 rounded-lg hover:border-blue-900 transition">
+                    ${size}
+                </button>
+            `).join('');
+
+            const addBtn = document.getElementById('modal-add-btn');
+            addBtn.onclick = (e) => addToCart(productId, e);
+
+            updateGalleryView();
+            document.getElementById('product-gallery-modal').classList.remove('hidden');
+        }
+
+        function updateGalleryView() {
+            const t = i18n[currentLang];
+            const rawProd = productsData.find(p => p.id === currentModalProductId);
+            const product = getLocalizedProduct(rawProd);
+            const currentAngle = product.gallery[currentImageIndex];
+            const mainImg = document.getElementById('modal-main-img');
+            
+            mainImg.classList.remove('animate-angle');
+            void mainImg.offsetWidth;
+            mainImg.src = currentAngle.url;
+            mainImg.classList.add('animate-angle');
+
+            document.getElementById('modal-angle-badge').innerHTML = `<i class="fa-solid fa-rotate mx-1 text-red-400"></i> ${currentAngle.label}`;
+            document.getElementById('angle-title-explain').innerText = `${t.explainPrefix} (${currentAngle.label}):`;
+            document.getElementById('angle-desc-explain').innerText = currentAngle.explain;
+
+            const topPills = document.getElementById('top-angle-pills');
+            topPills.innerHTML = product.gallery.map((angleObj, idx) => `
+                <button onclick="setGalleryImage(${idx})" class="text-[11px] font-bold px-2.5 py-1 rounded-lg transition ${idx === currentImageIndex ? 'bg-slate-900 text-white shadow' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}">
+                    ${angleObj.shortLabel}
+                </button>
+            `).join('');
+
+            const thumbsContainer = document.getElementById('modal-thumbnails');
+            thumbsContainer.innerHTML = product.gallery.map((angleObj, idx) => `
+                <div onclick="setGalleryImage(${idx})" class="thumb-card ${idx === currentImageIndex ? 'active' : 'bg-white border-gray-200'} cursor-pointer border-2 rounded-xl p-1.5 text-center transition">
+                    <div class="h-16 overflow-hidden rounded-lg mb-1 bg-slate-50 flex items-center justify-center">
+                        <img src="${angleObj.url}" class="w-full h-full object-contain">
+                    </div>
+                    <span class="text-[11px] font-extrabold block ${idx === currentImageIndex ? 'text-blue-900' : 'text-gray-600'}">${angleObj.shortLabel}</span>
+                </div>
+            `).join('');
+        }
+
+        function uploadCustomAngleImage(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                customUploads[`${currentModalProductId}_${currentImageIndex}`] = e.target.result;
+                renderProducts();
+                updateGalleryView();
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function setGalleryImage(index) { currentImageIndex = index; updateGalleryView(); }
+        function nextImage() { currentImageIndex = (currentImageIndex + 1) % 4; updateGalleryView(); }
+        function prevImage() { currentImageIndex = (currentImageIndex - 1 + 4) % 4; updateGalleryView(); }
+        function closeGalleryModal() { document.getElementById('product-gallery-modal').classList.add('hidden'); }
+
+        function selectSizeInModal(productId, size, btnElement) {
+            selectedSizes[productId] = size;
+            Array.from(document.getElementById('modal-sizes').children).forEach(btn => btn.classList.remove('active'));
+            btnElement.classList.add('active');
+
+            const cardParent = document.getElementById(`sizes-${productId}`);
+            if (cardParent) {
+                Array.from(cardParent.children).forEach(btn => {
+                    if (btn.innerText.trim() == size) btn.classList.add('active');
+                    else btn.classList.remove('active');
+                });
+            }
+        }
+
+        function toggleSizeGuide() { document.getElementById('size-guide-modal').classList.toggle('hidden'); }
+
+        function selectSize(productId, size, btnElement) {
+            selectedSizes[productId] = size;
+            Array.from(document.getElementById(`sizes-${productId}`).children).forEach(btn => btn.classList.remove('active'));
+            btnElement.classList.add('active');
+        }
+
+        function addToCart(productId, event) {
+            const t = i18n[currentLang];
+            const size = selectedSizes[productId];
+            if (!size) {
+                alert(t.selectSizeAlert);
+                return;
+            }
+
+            const existingItem = cart.find(item => item.id === productId && item.size === size);
+            if (existingItem) {
+                existingItem.qty += 1;
+            } else {
+                cart.push({ id: productId, size: size, qty: 1 });
+            }
+
+            updateCartUI();
+            
+            const btn = event.currentTarget;
+            const originalHtml = btn.innerHTML;
+            btn.innerHTML = `<i class="fa-solid fa-check"></i> ${t.addedToCart}`;
+            btn.classList.replace('bg-slate-900', 'bg-green-600');
+            setTimeout(() => {
+                btn.innerHTML = originalHtml;
+                btn.classList.replace('bg-green-600', 'bg-slate-900');
+            }, 1000);
+        }
+
+        function updateCartUI() {
+            const t = i18n[currentLang];
+            document.getElementById('cart-count').innerText = cart.reduce((sum, item) => sum + item.qty, 0);
+            const cartItemsContainer = document.getElementById('cart-items');
+
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = `<p class="text-center text-gray-400 py-6">${t.emptyCart}</p>`;
+            } else {
+                cartItemsContainer.innerHTML = cart.map((item, index) => {
+                    const rawProd = productsData.find(p => p.id === item.id);
+                    const locProd = getLocalizedProduct(rawProd);
+                    return `
+                    <div class="flex items-center justify-between bg-white p-3 rounded-lg border shadow-sm">
+                        <div class="flex items-center gap-3">
+                            <img src="${locProd.img}" class="w-14 h-14 object-contain bg-slate-50 rounded-md border">
+                            <div>
+                                <h5 class="text-sm font-bold text-gray-800">${locProd.name}</h5>
+                                <div class="text-xs text-gray-500 mt-0.5">
+                                    <span class="bg-blue-100 text-blue-900 font-bold px-2 py-0.5 rounded">${t.sizeWord}: ${item.size}</span>
+                                    <span class="mx-2">${t.qtyWord}: ${item.qty}</span>
+                                </div>
+                                <p class="text-sm font-bold text-blue-900 mt-1">${locProd.price * item.qty} ${t.currency}</p>
+                            </div>
+                        </div>
+                        <button onclick="removeFromCart(${index})" class="text-red-400 hover:text-red-600 p-2">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </div>
+                `}).join('');
+            }
+            updateTotals();
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCartUI();
+        }
+
+        function updateTotals() {
+            const subtotal = cart.reduce((sum, item) => {
+                const rawProd = productsData.find(p => p.id === item.id);
+                return sum + (rawProd.price * item.qty);
+            }, 0);
+            const shippingSelect = document.getElementById('shipping-gov');
+            const shippingCost = subtotal > 0 ? parseInt(shippingSelect.value || 0) : 0;
+            
+            document.getElementById('subtotal-price').innerText = subtotal;
+            document.getElementById('shipping-price').innerText = shippingCost;
+            document.getElementById('total-price').innerText = subtotal + shippingCost;
+        }
+
+        function toggleCart() {
+            document.getElementById('cart-modal').classList.toggle('hidden');
+        }
+
+        function showPaymentInfo(method) {
+            const t = i18n[currentLang];
+            const infoBox = document.getElementById('payment-details');
+            infoBox.classList.remove('hidden');
+            if (method === 'wallet') infoBox.innerHTML = t.payInfoWallet;
+            else if (method === 'instapay') infoBox.innerHTML = t.payInfoInstapay;
+            else if (method === 'card') infoBox.innerHTML = t.payInfoCard;
+            else infoBox.classList.add('hidden');
+        }
+
+        function checkoutOrder() {
+            const t = i18n[currentLang];
+            if (cart.length === 0) {
+                alert(t.emptyCart);
+                return;
+            }
+            const name = document.getElementById('cust-name').value;
+            const phone = document.getElementById('cust-phone').value;
+            const gov = document.getElementById('shipping-gov');
+            const address = document.getElementById('cust-address').value;
+            const payVal = document.querySelector('input[name="payment"]:checked').value;
+            const payText = payVal === 'cod' ? t.pay1 : (payVal === 'wallet' ? t.pay2 : (payVal === 'instapay' ? t.pay3 : t.pay4));
+
+            if (!name || !phone || gov.value == "0" || !address) {
+                alert(t.accFillAlert);
+                return;
+            }
+
+            const govName = gov.options[gov.selectedIndex].text;
+            const total = document.getElementById('total-price').innerText;
+            const itemsList = cart.map(item => {
+                const rawProd = productsData.find(p => p.id === item.id);
+                const locProd = getLocalizedProduct(rawProd);
+                return `▪️ ${locProd.name} (${t.sizeWord}: ${item.size}) - ${t.qtyWord}: ${item.qty}`;
+            }).join('\n');
+
+            const orderMessage = currentLang === 'ar' 
+                ? `🛍️ *طلب جديد من متجر دكان حريمي (DOKAN Harimi)*\n\n👤 *الاسم:* ${name}\n📱 *الموبايل:* ${phone}\n📍 *المحافظة:* ${govName}\n🏠 *العنوان:* ${address}\n💳 *طريقة الدفع:* ${payText}\n\n👖 *الموديلات المطلوبة:*\n${itemsList}\n\n💰 *الإجمالي الكلي بالشحن:* ${total} ${t.currency}`
+                : `🛍️ *New Order from DOKAN Harimi*\n\n👤 *Name:* ${name}\n📱 *Mobile:* ${phone}\n📍 *Region:* ${govName}\n🏠 *Address:* ${address}\n💳 *Payment:* ${payText}\n\n👖 *Ordered Items:*\n${itemsList}\n\n💰 *Total with Shipping:* ${total} ${t.currency}`;
+
+            window.open(`https://wa.me/${SOCIAL_LINKS.whatsappNumber}?text=${encodeURIComponent(orderMessage)}`, '_blank');
+            
+            cart = [];
+            updateCartUI();
+            toggleCart();
+        }
+
+        // تشغيل اللوجو المفرغ والإعدادات والترجمة والفلاتر عند فتح المتجر
+        loadSavedLogo();
+        initSocialLinks();
+        applyTranslations();
+    </script>
+</body>
+</html>
